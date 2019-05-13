@@ -4,6 +4,7 @@ from flask import Flask
 def create_app(test_config=None):
     # Creating Flask appication object
     app = Flask(__name__)
+    # Configuration
     # Loading default development configurations
     from portfolio import default_settings
     # Apply default development configurations
@@ -21,9 +22,16 @@ def create_app(test_config=None):
         print('WARNING!!!')
         print('Proceeding with development mode')
 
-
     if test_config is not None:
         app.config.update(test_config)
+
+
+    # Loaidng Flask Extension
+    # DataBase
+    from portfolio.models import db
+    db.init_app(app)
+
+
 
     import portfolio.views
     return app
