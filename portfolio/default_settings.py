@@ -1,7 +1,16 @@
 import secrets
 token = secrets.token_hex(16)
-print(token)
-ENV = 'development'
-DEBUG = True
-TESTING = True
-SECRETE_KEY = token
+
+class Config(object):
+    DEBUG = False
+    TESTING = False
+    ENV = 'production'
+    SECRETE_KEY = token
+
+class DevelopmentConfig(Config):
+    DEBUG = True
+    ENV = 'development'
+    print(Config.SECRETE_KEY)
+
+class TestingConfig(Config):
+    TESTING = True
