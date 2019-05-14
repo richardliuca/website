@@ -1,6 +1,8 @@
 import os
 from flask import Flask
 from portfolio.models import db, bcrypt, Admin
+from portfolio.admin import admin_portal
+from flask_login import LoginManager
 
 def create_app(test_config=None):
     # Creating Flask appication object
@@ -32,8 +34,15 @@ def create_app(test_config=None):
     except OSError:
         print('Instance path exist, proceeding ...')
 
+    # Initializing app for various extension
     db.init_app(app)
     bcrypt.init_app(app)
+    login_manager = LoginManager(app)
+    login_manager.login_view = 'login'
+    login_manager.login_message_category = 'info'
+
+    # Register blueprints
+    app.register_blueprint(admin_portal)
 
 
     return app
