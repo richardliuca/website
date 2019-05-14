@@ -19,15 +19,19 @@ def create_admin():
     from portfolio import bcrypt
 
     file_path = os.path.join(app.instance_path, 'admin.json')
-    with open(file_path, 'r') as file:
-        data = json.load(file)
-        master = Admin(
-            name=data['name'],
-            email=data['email'],
-            password=bcrypt.generate_password_hash(data['password']))
-        portfolio.db.session.add(master)
-        portfolio.db.session.commit()
-
+    try:
+        with open(file_path, 'r') as file:
+            data = json.load(file)
+            master = Admin(
+                name=data['name'],
+                email=data['email'],
+                password=bcrypt.generate_password_hash(data['password']))
+            portfolio.db.session.add(master)
+            portfolio.db.session.commit()
+    except FileNotFoundError:
+        print('File not found')
+        print('Expected admin.json file inside instance folder')
+        print('With properties: name, email, password')
 
 if __name__ == '__main__':
     app.run()
