@@ -1,17 +1,21 @@
 import os
 from flask import Flask
+from portfolio.models import db, bcrypt, Admin
 
 def create_app(test_config=None):
     # Creating Flask appication object
     app = Flask(__name__)
-    # Configuration
-    # Loading default development configurations
-    from portfolio import default_settings
+    with app.app_context():
+        # Configuration
+        # Loading default development configurations
+        from portfolio import default_settings
     # Apply default development configurations
-    app.config.from_object(default_settings)
+    app.config.from_object(default_settings.DevelopmentConfig)
 
-
-    if os.environ.get('APPLICATION_SETTINGS', default=None):
+    if test_config is not None:
+        # Loading testing configurations
+        app.config.from_object(default_settings.TestingConfig)
+    elif os.environ.get('APPLICATION_SETTINGS', default=None):
         # Environment variable : APPLICATION_SETTINGS points to a python file
         # The pointed files contain configurations for application instance
         # Inside the config file, values must be in all uppercase
@@ -22,16 +26,14 @@ def create_app(test_config=None):
         print('WARNING!!!')
         print('Proceeding with development mode')
 
-    if test_config is not None:
-        app.config.update(test_config)
+    # Creating instance folder if not exists
+    try:
+        os.makedirs(app.instance_path)
+    except OSError:
+        print('Instance path exist, proceeding ...')
 
-
-    # Loaidng Flask Extension
-    # DataBase
-    from portfolio.models import db
     db.init_app(app)
+    bcrypt.init_app(app)
 
 
-
-    import portfolio.views
     return app
