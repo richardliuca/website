@@ -48,7 +48,7 @@ class Login(GeneralView):
                     confirm_login()
                     return redirect(next_page)
                 else:
-                    return redirect(url_for('home'))
+                    return redirect(url_for('front_page.home'))
             else:
                 flash('Login failed', 'danger')
         return super().post(title='Login', form=self._form)
