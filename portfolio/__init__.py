@@ -1,7 +1,9 @@
 import os
 from flask import Flask
 from portfolio.models import db, bcrypt, Admin
+from portfolio.front_page import front_page
 from portfolio.admin import admin_portal
+from portfolio.project_hub import project_hub
 from flask_login import LoginManager
 
 def create_app(test_config=None):
@@ -38,11 +40,18 @@ def create_app(test_config=None):
     db.init_app(app)
     bcrypt.init_app(app)
     login_manager = LoginManager(app)
-    login_manager.login_view = 'login'
+    login_manager.login_view = 'admin_portal.login'
     login_manager.login_message_category = 'info'
 
+    login_manager.refresh_view = 'admin_portal.login'
+    login_manager.needs_refresh_message = \
+        (u'To protect your account, please reauthenticate to access this page.')
+    login_manager.needs_refresh_message_category = 'info'
+
     # Register blueprints
+    app.register_blueprint(front_page)
     app.register_blueprint(admin_portal)
+    app.register_blueprint(project_hub)
 
 
     return app
