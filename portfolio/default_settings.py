@@ -8,6 +8,7 @@ class Config(object):
     TESTING = False
     ENV = 'production'
     SECRETE_KEY = token
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 class DevelopmentConfig(Config):
     DEBUG = True
