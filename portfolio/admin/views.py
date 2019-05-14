@@ -53,3 +53,6 @@ class Login(GeneralView):
 
 class Dashboard(GeneralView):
     decorators = [login_required, fresh_login_required]
+
+    def get(self):
+        return super().get(title='Dashboard')
