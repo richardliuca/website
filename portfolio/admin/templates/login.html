@@ -1,16 +1,14 @@
 {% extends "layout.html" %}
 {% block body %}
-<h1>Please login to access dashboard</h1>
-
-<div class="">
+<div class="mx-auto" style="width: 400px;">
   <form class="" action="" method="POST">
     {{ form.hidden_tag() }}
     <fieldset>
-      <div class="">
+      <div class="form-group">
         {{ form.email.label(class="form-control-label") }}
         {% if form.email.errors %}
           {{ form.email(class="form-control form-control-lg is-invalid") }}
-          <div class="">
+          <div class="invalid-feedback">
             {% for error in form.emails.errors %}
               <span>{{ error }}</span>
             {% endfor %}
@@ -20,11 +18,11 @@
         {% endif %}
       </div>
 
-      <div class="">
+      <div class="form-group">
         {{ form.password.label(class="form-control-label") }}
         {% if form.password.errors %}
           {{ form.password(class="form-control form-control-lg is-invalid") }}
-          <div class="">
+          <div class="invalid-feedback">
             {% for error in form.password.errors %}
               <span>{{ error }}</span>
             {% endfor %}
@@ -34,7 +32,7 @@
         {% endif %}
       </div>
 
-      <div class="">
+      <div class="form-group">
         {{ form.remember(class="form-check-input") }}
         {{ form.remember.label(class="form-check-label") }}
       </div>
@@ -47,3 +45,7 @@
   </form>
 </div>
 {% endblock body %}
+
+{% block script %}
+  <script type="text/javascript" src="{{ url_for('admin_portal.static', filename='js/login.js') }}"></script>
+{% endblock script %}
