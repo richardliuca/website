@@ -20,8 +20,10 @@ class GeneralView(MethodView):
         return self.render(*args, **kwargs)
 
     def render(self, *args, **kwargs):
-        return render_template(self._template_name, *args, **kwargs)
-
+        try:
+            return render_template(self._template_name, *args, **kwargs)
+        except TemplateNotFound:
+            abort(404)
 
 class Login(GeneralView):
 
