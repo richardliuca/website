@@ -2,4 +2,48 @@
 {% block body %}
 <h1>Please login to access dashboard</h1>
 
+<div class="">
+  <form class="" action="" method="POST">
+    {{ form.hidden_tag() }}
+    <fieldset>
+      <div class="">
+        {{ form.email.label(class="form-control-label") }}
+        {% if form.email.errors %}
+          {{ form.email(class="form-control form-control-lg is-invalid") }}
+          <div class="">
+            {% for error in form.emails.errors %}
+              <span>{{ error }}</span>
+            {% endfor %}
+          </div>
+        {% else %}
+          {{ form.email(class="form-control form-control-lg") }}
+        {% endif %}
+      </div>
+
+      <div class="">
+        {{ form.password.label(class="form-control-label") }}
+        {% if form.password.errors %}
+          {{ form.password(class="form-control form-control-lg is-invalid") }}
+          <div class="">
+            {% for error in form.password.errors %}
+              <span>{{ error }}</span>
+            {% endfor %}
+          </div>
+        {% else %}
+          {{ form.password(class="form-control form-control-lg") }}
+        {% endif %}
+      </div>
+
+      <div class="">
+        {{ form.remember(class="form-check-input") }}
+        {{ form.remember.label(class="form-check-label") }}
+      </div>
+    </fieldset>
+
+  <div class="">
+    {{ form.submit(class="btn btn-outline-info") }}
+  </div>
+
+  </form>
+</div>
 {% endblock body %}

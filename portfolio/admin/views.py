@@ -3,7 +3,7 @@ from jinja2 import TemplateNotFound
 from flask_login import login_user, logout_user, current_user, login_required,\
                         fresh_login_required, login_fresh, confirm_login
 from portfolio.admin import forms
-from portfolio import Admin
+from portfolio import bcrypt, Admin
 
 
 from flask.views import MethodView
@@ -13,11 +13,14 @@ class GeneralView(MethodView):
     def __init__(self, template_name):
         self._template_name = template_name
 
-    def get(self):
-        pass
+    def get(self, *args, **kwargs):
+        return self.render(*args, **kwargs)
 
-    def post(self):
-        pass
+    def post(self, *args, **kwargs):
+        return self.render(*args, **kwargs)
+
+    def render(self, *args, **kwargs):
+        return render_template(self._template_name, *args, **kwargs)
 
 
 class Login(GeneralView):
@@ -29,13 +32,13 @@ class Login(GeneralView):
     def get(self):
         if current_user.is_authenticated and login_fresh():
             return redirect(url_for('admin.dashboard'))
-        return render_template(self._template_name,
-                            title='Login', form=self._form)
+        return super().get(title='Login', form=self._form)
 
     def post(self):
         if self._form.validate_on_submit():
             admin = Admin.query.filter_by(email=self._form.email.data).first()
-            if admin and bcrypt.check_password_hash(admin.password, self._form.password.data):
+            if admin and bcrypt.check_password_hash(admin.password,
+                                                    self._form.password.data):
                 login_user(admin, remember=self._form.remember.data)
                 next_page = request.args.get('next')
                 if next_page:
@@ -46,7 +49,7 @@ class Login(GeneralView):
                     return redirect(url_for('home'))
             else:
                 flash('Login failed', 'danger')
-        self.get()
+        return super().post(title='Login', form=self._form)
 
 class Dashboard(GeneralView):
     decorators = [login_required, fresh_login_required]
