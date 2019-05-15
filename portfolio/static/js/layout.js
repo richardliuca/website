@@ -6,7 +6,7 @@ $(document).ready(function(){
     $(".alert-info").slideUp(500);
   });
   var title = $("title").html();
-  if (title == "Home" || title == "Projects Hub" || title == "About Me"){
+  if (title == "Home" || title == "Projects Hub" || title == "About Me" || title == "Dashboard"){
     $("a#nav-item").removeClass("active");
     $("a#"+title.replace(" ", "-")).addClass("active");
   } else {
