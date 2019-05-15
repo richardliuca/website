@@ -43,7 +43,7 @@ class Logout(GeneralView):
                 flash('Logged out', 'success')
                 return redirect(url_for('front_page.home'))
             except:
-                flash('Logout errored', 'error')
+                flash('Logout errored', 'danger')
         else:
             flash('Your were not logged in', 'info')
 
