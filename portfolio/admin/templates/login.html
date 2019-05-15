@@ -7,6 +7,7 @@
 
 <div class="text-center" id="block-body">
   <form class="form-signin" action="" method="POST">
+    {{ form.hidden_tag() }}
     <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
     <fieldset>
       <div class="form-group">
@@ -43,7 +44,7 @@
       </div>
     </fieldset>
 
-  <div class="">
+  <div class="form-group">
     {{ form.submit(class="btn btn-lg btn-primary btn-block", type="submit", value="Sign in") }}
   </div>
 

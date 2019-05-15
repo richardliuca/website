@@ -32,6 +32,7 @@ class Login(GeneralMethodView):
                     return redirect(url_for('admin_portal.dashboard'))
             else:
                 flash('Login failed', 'danger')
+        print(self._form.errors)
         return super().post(title='Login', form=self._form)
 
 class Logout(GeneralView):
