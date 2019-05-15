@@ -1,31 +1,12 @@
-from flask import render_template, url_for, flash, redirect, request, abort
+from flask import url_for, flash, redirect, request, abort
 from jinja2 import TemplateNotFound
 from flask_login import login_user, logout_user, current_user, login_required,\
                         fresh_login_required, login_fresh, confirm_login
 from portfolio.admin import forms
 from portfolio import bcrypt, Admin
+from portfolio.views  import GeneralView, GeneralMethodView
 
-
-from flask.views import MethodView
-
-class GeneralView(MethodView):
-
-    def __init__(self, template_name):
-        self._template_name = template_name
-
-    def get(self, *args, **kwargs):
-        return self.render(*args, **kwargs)
-
-    def post(self, *args, **kwargs):
-        return self.render(*args, **kwargs)
-
-    def render(self, *args, **kwargs):
-        try:
-            return render_template(self._template_name, *args, **kwargs)
-        except TemplateNotFound:
-            abort(404)
-
-class Login(GeneralView):
+class Login(GeneralMethodView):
 
     def __init__(self, template_name):
         super().__init__(template_name)
@@ -53,7 +34,24 @@ class Login(GeneralView):
                 flash('Login failed', 'danger')
         return super().post(title='Login', form=self._form)
 
-class Dashboard(GeneralView):
+class Logout(GeneralView):
+    def dispatch_request(self, *args, **kwargs):
+        if current_user.is_authenticated:
+            try:
+                logout_user()
+                flash('Logged out', 'success')
+                return redirect(url_for('front_page.home'))
+            except:
+                flash('Logout errored', 'error')
+        else:
+            flash('Your were not logged in', 'info')
+
+        if request.referrer:
+            return redirect(request.referrer)
+        else:
+            return redirect(url_for('front_page.home'))
+
+class Dashboard(GeneralMethodView):
     decorators = [login_required, fresh_login_required]
 
     def get(self):
