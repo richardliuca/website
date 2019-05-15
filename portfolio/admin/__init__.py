@@ -7,6 +7,7 @@ admin_portal = Blueprint('admin_portal', __name__,
 
 admin_portal.add_url_rule('/login/',
                 view_func=Login.as_view('login', template_name='login.html'))
+admin_portal.add_url_rule('/home/login/', endpoint='login')
 admin_portal.add_url_rule('/logout/',
                 view_func=Logout.as_view('logout'))
 admin_portal.add_url_rule('/dashboard/',
