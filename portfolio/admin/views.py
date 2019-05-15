@@ -24,12 +24,12 @@ class Login(GeneralMethodView):
                                                     self._form.password.data):
                 login_user(admin, remember=self._form.remember.data)
                 next_page = request.args.get('next')
+                flash(f'Welcome {current_user.name}', 'success')
                 if next_page:
-                    flash(f'Welcome {current_user.name}', 'success')
                     confirm_login()
                     return redirect(next_page)
                 else:
-                    return redirect(url_for('front_page.home'))
+                    return redirect(url_for('admin_portal.dashboard'))
             else:
                 flash('Login failed', 'danger')
         return super().post(title='Login', form=self._form)
