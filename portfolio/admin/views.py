@@ -14,7 +14,7 @@ class Login(GeneralMethodView):
 
     def get(self):
         if current_user.is_authenticated and login_fresh():
-            return redirect(url_for('admin.dashboard'))
+            return redirect(url_for('admin_portal.dashboard'))
         return super().get(title='Login', form=self._form)
 
     def post(self):
