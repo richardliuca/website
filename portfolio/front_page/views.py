@@ -18,7 +18,6 @@ class Home(GeneralView):
                         break
         except:
             pass
-        print(cover_path)
         return super().dispatch_request(title='Home', cover=cover_path)
 
 class About(GeneralView):
