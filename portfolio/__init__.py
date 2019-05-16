@@ -1,6 +1,7 @@
 import os
 from flask import Flask
 from portfolio.models import db, bcrypt, login_manager, Admin
+from portfolio.views import FilesView
 from portfolio.front_page import front_page
 from portfolio.admin import admin_portal
 from portfolio.project_hub import project_hub
@@ -51,6 +52,9 @@ def create_app(test_config=None):
     app.register_blueprint(front_page)
     app.register_blueprint(admin_portal)
     app.register_blueprint(project_hub)
+
+    # Register url
+    app.add_url_rule('/file/<path:file>', view_func=FilesView.as_view('file'))
 
 
     return app
