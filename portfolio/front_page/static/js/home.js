@@ -2,6 +2,8 @@ $(document).ready(function(){
   $("body").addClass("text-center");
   $("body").css({
     "background-image": `url(${$("#cover").html()})`,
+    "background-position": "center",
+    "background-repeat": "no-repeat",
     "background-size": "cover",
   });
   console.log(typeof $("#cover").html());
