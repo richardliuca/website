@@ -8,6 +8,9 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/lib/Chart.bundle.min.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
 
+    {% block static %}
+    {% endblock static %}
+
     {% block style %}
     {% endblock style %}
 
