@@ -1,5 +1,4 @@
 $(document).ready(function(){
-  $("body").addClass("text-center");
   $(".alert-success").delay(5000).fadeTo(2000, 500).slideUp(500, function(){
     $(".alert-success").slideUp(500);
   });
@@ -13,6 +12,5 @@ $(document).ready(function(){
   } else {
     $("a#nav-item").removeClass("active");
   }
-
 
 })
