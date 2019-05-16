@@ -4,5 +4,8 @@ body {
 }
 
 .alert {
+  position: static;
   margin: 0 auto;
+  width: 100%;
+  z-index: 999;
 }
