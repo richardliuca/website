@@ -1,5 +1,9 @@
 {% extends "layout.html" %}
 
+{% block static %}
+  <span id="cover" style="display: none;">{{ cover }}</span>
+{% endblock static %}
+
 {% block style %}
   <link rel="stylesheet" href="{{ url_for('front_page.static', filename='css/home.css') }}">
 {% endblock style %}
