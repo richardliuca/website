@@ -2,5 +2,15 @@ from flask import url_for, flash, redirect, request, abort
 from portfolio.views import GeneralView
 
 class Notebook(GeneralView):
+
+    def count_notes(self):
+        try:
+            from portfolio.notes_catalog import notes_num
+        except:
+            notes_num = 0
+
+        return notes_num
+
     def dispatch_request(self):
-        return super().dispatch_request(title='Notebook')
+        notes_num = self.count_notes()
+        return super().dispatch_request(title='Notebook', notes_num=notes_num)
