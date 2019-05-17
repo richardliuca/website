@@ -1,5 +1,4 @@
 from flask import url_for, flash, redirect, request, abort, current_app
-from jinja2 import TemplateNotFound
 from portfolio.views import GeneralView
 import os, pathlib
 import os.path as path

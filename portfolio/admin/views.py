@@ -1,5 +1,4 @@
 from flask import url_for, flash, redirect, request, abort
-from jinja2 import TemplateNotFound
 from flask_login import login_user, logout_user, current_user, login_required,\
                         fresh_login_required, login_fresh, confirm_login
 from portfolio.admin import forms
