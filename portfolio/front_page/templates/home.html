@@ -17,7 +17,8 @@
       <h3 class="masthead-brand">Richard Liu</h3>
       <nav class="nav nav-masthead justify-content-center">
         <a class="nav-link" id="Home" href="{{ url_for('front_page.home') }}">Home</a>
-        <a class="nav-link" id="Projects-Hub" href="{{ url_for('project_hub.hub') }}">Projects</a>
+        <a class="nav-link" id="Projects-Hub" href="{{ url_for('project_hub.hub') }}">Project Hub</a>
+        <a class="nav-link" id="Notebook" href="{{ url_for('notebook.notebook') }}">Notebook</a>
         <a class="nav-link" id="About-Me" href="{{ url_for('front_page.about') }}">About</a>
         {% if current_user.is_authenticated %}
           <a class="nav-link" id="Dashboard" href="{{ url_for('admin_portal.dashboard') }}">Dashboard</a>
