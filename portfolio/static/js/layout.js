@@ -1,4 +1,5 @@
 $(document).ready(function(){
+  feather.replace();
   $(".alert-success").delay(5000).fadeTo(2000, 500).slideUp(500, function(){
     $(".alert-success").slideUp(500);
   });
