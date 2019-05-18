@@ -30,7 +30,7 @@
           <h2>Something</h2>
         </div>
         <div class="col-md-4 text-center">
-          <button type="button" name="button" class="btn btn-link btn-outline-info btn-lg btn-block" href="{{ url_for('front_page.static', filename='resume.pdf') }}">Resume</button>
+          <a role="button" aria-pressed="true" class="btn btn-link btn-outline-info btn-lg btn-block" href="{{ url_for('file', file='static/About/resume.pdf',  _external='True') }}">Resume</a>
         </div>
       </div>
     </div>
