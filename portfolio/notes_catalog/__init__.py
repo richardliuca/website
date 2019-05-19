@@ -1,17 +1,21 @@
-import os.path as path
+from flask import current_app
+from pathlib import Path
 import os
-from importlib import import_module
 
-dir, _ = path.split(path.abspath(__file__))
-
-notes_num = 0
+proj_num = 0
 module_list = []
 
-for folder in os.listdir(dir):
+proj_dir = Path(current_app.instance_path).joinpath('notes')
+
+for folder in os.listdir(proj_dir):
     if folder.startswith('__'):
         pass
-    elif path.isdir(path.join(dir, folder)):
-        notes_num += 1
-        module_list.append(import_module('portfolio.notes_catalog.'+folder))
+    elif proj_dir.joinpath(folder).is_dir():
+        proj_num += 1
+        module_list.append({
+            'name': 'Python',
+            'description': 'I learnt python from Learn Python The Hard Way',
+            'category': 'Programming Languange'
+        })
     else:
         pass

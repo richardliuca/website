@@ -1,17 +1,21 @@
-import os.path as path
+from flask import current_app
+from pathlib import Path
 import os
-from importlib import import_module
-
-dir, _ = path.split(path.abspath(__file__))
 
 proj_num = 0
 module_list = []
 
-for folder in os.listdir(dir):
+proj_dir = Path(current_app.instance_path).joinpath('projects')
+
+for folder in os.listdir(proj_dir):
     if folder.startswith('__'):
         pass
-    elif path.isdir(path.join(dir, folder)):
+    elif proj_dir.joinpath(folder).is_dir():
         proj_num += 1
-        module_list.append(import_module('portfolio.project_catalog.'+folder))
+        module_list.append({
+            'name': 'Flask Website',
+            'description': "I built a personal website using Flask backend framework and using bootstrap for most of the front end.",
+            'category': 'Software'
+        })
     else:
         pass
