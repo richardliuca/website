@@ -1,19 +1,11 @@
 from flask import url_for, flash, redirect, request, abort
 from portfolio.views import GeneralView
+from portfolio.catalog import Catalog
 
 class Notebook(GeneralView):
 
-    def count_notes(self):
-        try:
-            from portfolio.notes_catalog import notes_num, module_list
-        except:
-            notes_num = 0
-            module_list = None
-
-        return notes_num, module_list
-
     def dispatch_request(self):
-        notes_num, modules = self.count_notes()
+        book_keeping = Catalog(source='notes')
         return super().dispatch_request(title='Notebook',
-                                        num=notes_num,
-                                        modules=modules)
+                                        num=book_keeping.num,
+                                        modules=book_keeping.property_list)

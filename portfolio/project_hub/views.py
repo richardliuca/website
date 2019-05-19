@@ -1,19 +1,11 @@
-from flask import url_for, flash, redirect, request, abort, current_app
+from flask import url_for, flash, redirect, request, abort
 from portfolio.views import GeneralView
+from portfolio.catalog import Catalog
 
 class Hub(GeneralView):
 
-    def count_projs(self):
-        try:
-            from portfolio.project_catalog import proj_num, module_list
-        except:
-            proj_num = 0
-            module_list = None
-
-        return proj_num, module_list
-
     def dispatch_request(self):
-        proj_num, modules = self.count_projs()
+        book_keeping = Catalog(source='projects')
         return super().dispatch_request(title='Project Hub',
-                                        num=proj_num,
-                                        modules=modules)
+                                        num=book_keeping.num,
+                                        modules=book_keeping.property_list)
