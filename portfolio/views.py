@@ -45,3 +45,6 @@ class FilesView(View):
                                         filename=file)
         except:
             abort(404)
+
+class PostView(MethodView):
+    pass
