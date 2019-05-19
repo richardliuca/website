@@ -8,6 +8,7 @@ class Notebook(GeneralView):
             from portfolio.notes_catalog import notes_num, module_list
         except:
             notes_num = 0
+            module_list = None
 
         return notes_num, module_list
 
