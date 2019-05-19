@@ -36,6 +36,11 @@ def create_app(test_config=None):
         os.makedirs(app.instance_path)
     except OSError:
         print('Instance path exist, proceeding ...')
+    for path in app.config['INSTANCE_STRUCTURE']:
+        try:
+            os.makedirs(os.path.join(app.instance_path, path))
+        except:
+            continue
 
     # Initializing app for various extension
     db.init_app(app)

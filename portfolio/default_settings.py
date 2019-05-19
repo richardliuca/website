@@ -9,6 +9,14 @@ class Config(object):
     ENV = 'production'
     SECRET_KEY = token
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    INSTANCE_STRUCTURE = [
+        'static/About',
+        'static/Home',
+        'static/Projects',
+        'static/Notes',
+        'notes',
+        'projects'
+    ]
 
 class DevelopmentConfig(Config):
     DEBUG = True
