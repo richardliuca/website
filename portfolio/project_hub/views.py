@@ -17,5 +17,5 @@ class Hub(GeneralView):
     def dispatch_request(self):
         proj_num, modules = self.count_proj()
         return super().dispatch_request(title='Project Hub',
-                                        proj_num=proj_num,
+                                        num=proj_num,
                                         modules=modules)

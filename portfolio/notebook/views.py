@@ -14,5 +14,5 @@ class Notebook(GeneralView):
     def dispatch_request(self):
         notes_num, modules = self.count_notes()
         return super().dispatch_request(title='Notebook',
-                                        notes_num=notes_num,
+                                        num=notes_num,
                                         modules=modules)
