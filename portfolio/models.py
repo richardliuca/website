@@ -26,14 +26,20 @@ class Admin(db.Model, UserMixin):
 
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    complete = db.Column(db.Boolean, nullable=False)
     title = db.Column(db.String(40), unique=True, nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    description = db.Column(db.String(120), nullable=False)
     documentation = db.Column(db.Text, nullable=False)
+    template = db.Column(db.String(120), unique=True, nullable=True)
     admin_id = db.Column(db.Integer, db.ForeignKey('admin.id'), nullable=False)
 
 class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    complete = db.Column(db.Boolean, nullable=False)
     title = db.Column(db.String(40), unique=True, nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    description = db.Column(db.String(120), nullable=False)
     documentation = db.Column(db.Text, nullable=False)
+    template = db.Column(db.String(120), unique=True, nullable=True)
     admin_id = db.Column(db.Integer, db.ForeignKey('admin.id'), nullable=False)
