@@ -29,14 +29,14 @@ def unique_post(form, field):
 class NewPostForm(FlaskForm):
     post = SelectField(u'Post', choices=[('projects', 'Project'),
                                         ('notes', 'Note')])
-    category = SelectField(u'Category')
-    date = DateTimeField(u'Date', validators=[Optional()])
+    category = SelectField(u'Category', choices=[])
+    new_category = StringField(u'New Category', validators=[Optional(), unique_post])
     title = StringField(u'Title', validators=[InputRequired(),
                                             DataRequired(),
                                             unique_post])
     descript = StringField(u'Short Summary', validators=[InputRequired(),
                                                         DataRequired()])
-    doc = TextAreaField(u'More', validators=[InputRequired(), DataRequired()])
+    doc = TextAreaField(u'Documentation', validators=[InputRequired(), DataRequired()])
     template = StringField(u'Html File', validators=[Optional(), unique_post])
     draft_submit = SubmitField(u'Save as Draft', validators=[Optional()])
     complete_submit = SubmitField(u'Publish', validators=[Optional()])
