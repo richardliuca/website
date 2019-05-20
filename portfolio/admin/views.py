@@ -35,6 +35,7 @@ class Login(GeneralMethodView):
         return super().post(title='Login', form=self._form)
 
 class Logout(GeneralView):
+
     def dispatch_request(self, *args, **kwargs):
         if current_user.is_authenticated:
             try:
@@ -56,3 +57,22 @@ class Dashboard(GeneralMethodView):
 
     def get(self):
         return super().get(title='Dashboard')
+
+class NewPost(GeneralMethodView):
+    decorators = [login_required, fresh_login_required]
+
+    def __init__(self, template_name):
+        super().__init__(template_name)
+        self._form = forms.NewPostForm()
+
+    def get(self):
+        return super().get(title='New Post', form=self._form)
+
+    def post(self):
+        pass
+
+class EditPost(GeneralMethodView):
+    pass
+
+class Database(GeneralView):
+    pass
