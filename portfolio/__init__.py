@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from flask import Flask
 from portfolio.models import db, bcrypt, login_manager, Admin
 from portfolio.views import FilesView
@@ -38,8 +39,8 @@ def create_app(test_config=None):
         print('Instance path exist, proceeding ...')
     for path in app.config['INSTANCE_STRUCTURE']:
         try:
-            os.makedirs(os.path.join(app.instance_path, path))
-        except:
+            os.makedirs(Path(app.instance_path).joinpath(path))
+        except OSError:
             continue
 
     # Initializing app for various extension
