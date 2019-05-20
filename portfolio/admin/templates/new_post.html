@@ -3,5 +3,94 @@
 
 
 {% block dashboard_content %}
-  <h2>New Post</h2>
+  <form class="" action="" method="POST">
+    {{ form.hidden_tag() }}
+    <fieldset>
+      <div class="form-group">
+        <div class="row">
+          <div class="form-group col-md-6 mb-0">
+            {{ form.post.label(class="form-control-label form-control-lg") }}
+          </div>
+          <div class="form-group col-md-3  mb-0">
+            {{ form.category.label(class="form-control-label form-control-lg") }}
+          </div>
+          <div class="form-group col-md-3  mb-0"></div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-md-6 mb-0">
+            {{ form.post(class="form-control form-control-sm") }}
+          </div>
+          <div class="form-group col-md-3 mb-0">
+            {{ form.category(class="form-control form-control-sm") }}
+          </div>
+          <div class="form-group col-md-3 mb-0">
+            {{ form.new_category(class="form-control form-control-sm", placeholder="New Category") }}
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        {{ form.title.label(class="form-control-label form-control-lg") }}
+        {% if form.title.errors %}
+          {{ form.title(class="form-control is-invalid", placeholder="Title") }}
+          <div class="invalid-feedback">
+            {% for error in form.title.errors %}
+              <span>{{ error }}</span>
+            {% endfor %}
+          </div>
+        {% else %}
+          {{ form.title(class="form-control", placeholder="Title") }}
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        {{ form.descript.label(class="form-control-label form-control-lg") }}
+        {% if form.descript.errors %}
+          {{ form.descript(class="form-control is-invalid", placeholder="Brief Summary") }}
+          <div class="invalid-feedback">
+            {% for error in form.descript.errors %}
+              <span>{{ error }}</span>
+            {% endfor %}
+          </div>
+        {% else %}
+          {{ form.descript(class="form-control", placeholder="Brief Summary") }}
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        {{ form.doc.label(class="form-control-label form-control-lg") }}
+        {% if form.doc.errors %}
+          {{ form.doc(class="form-control is-invalid", placeholder="Documentation") }}
+          <div class="invalid-feedback">
+            {% for error in form.doc.errors %}
+              <span>{{ error }}</span>
+            {% endfor %}
+          </div>
+        {% else %}
+          {{ form.doc(class="form-control", placeholder="Documentation") }}
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        {{ form.template.label(class="form-control-label form-control-lg") }}
+        {% if form.template.errors %}
+          {{ form.template(class="form-control is-invalid", placeholder="Template") }}
+          <div class="invalid-feedback">
+            {% for error in form.template.errors %}
+              <span>{{ error }}</span>
+            {% endfor %}
+          </div>
+        {% else %}
+          {{ form.template(class="form-control", placeholder="Template") }}
+        {% endif %}
+      </div>
+
+      <div class="form-group btn-group">
+        {{ form.cancel(class="btn btn-lg btn-danger", type="submit", value="Cancel") }}
+        {{ form.draft_submit(class="btn btn-lg btn-outline-primary", type="submit", value="Save As Draft") }}
+        {{ form.complete_submit(class="btn btn-lg btn-primary", type="submit", value="Publish") }}
+      </div>
+    </fieldset>
+  </form>
 {% endblock dashboard_content %}
