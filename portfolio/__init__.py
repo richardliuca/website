@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 from flask import Flask
-from portfolio.models import db, bcrypt, login_manager, Admin
+from portfolio.models import db, bcrypt, login_manager
 from portfolio.views import FilesView
 from portfolio.front_page import front_page
 from portfolio.admin import admin_portal
