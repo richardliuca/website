@@ -17,10 +17,11 @@ class LoginForm(FlaskForm):
 def unique_post(form, field):
     if form.post.data:
         field_name = field.name if not(field.name == 'new_category') else 'category'
+        field_value = field.data.lower()
         if form.post.data == 'projects':
-            get_field = Project.query.filter_by(**{field_name: field.data}).first()
+            get_field = Project.query.filter_by(**{field_name: field_value}).first()
         else:
-            get_field = Note.query.filter_by(**{field_name: field.data}).first()
+            get_field = Note.query.filter_by(**{field_name: field_value}).first()
         if get_field:
             raise ValueError(f'{field.data} is already taken or in used')
     else:
