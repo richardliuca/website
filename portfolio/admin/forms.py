@@ -15,11 +15,12 @@ class LoginForm(FlaskForm):
     submit = SubmitField(u'Login')
 
 def unique_post(form, field):
-    if unique_post.post.data:
-        if unique_post.post.data == 'projects':
-            get_field = Project.query.filter_by(**{field.name: field.data}).first()
+    if form.post.data:
+        field_name = field.name if not(field.name == 'new_category') else 'category'
+        if form.post.data == 'projects':
+            get_field = Project.query.filter_by(**{field_name: field.data}).first()
         else:
-            get_field = Note.query.filter_by(**{field.name: field.data}).first()
+            get_field = Note.query.filter_by(**{field_name: field.data}).first()
         if get_field:
             raise ValueError(f'{field.data} is already taken or in used')
     else:
@@ -29,7 +30,7 @@ def unique_post(form, field):
 class NewPostForm(FlaskForm):
     post = SelectField(u'Post', choices=[('projects', 'Project'),
                                         ('notes', 'Note')])
-    category = SelectField(u'Category', choices=[])
+    category = SelectField(u'Category', choices=[], validators=[Optional()])
     new_category = StringField(u'New Category', validators=[Optional(), unique_post])
     title = StringField(u'Title', validators=[InputRequired(),
                                             DataRequired(),
