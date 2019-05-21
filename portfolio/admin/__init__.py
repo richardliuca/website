@@ -13,12 +13,15 @@ admin_portal.add_url_rule('/logout/',
 admin_portal.add_url_rule('/dashboard/',
                 view_func=Dashboard.as_view('dashboard',
                                             template_name='dashboard.html'))
-admin_portal.add_url_rule('/dashboard/new_post',
+admin_portal.add_url_rule('/dashboard/new_post/',
                 view_func=NewPost.as_view('new_post',
                                             template_name='new_post.html'))
-admin_portal.add_url_rule('/dashboard/edit_post',
+admin_portal.add_url_rule('/dashboard/edit_post/',
                 view_func=EditPost.as_view('edit_post',
                                             template_name='edit_post.html'))
-admin_portal.add_url_rule('/dashboard/database',
+admin_portal.add_url_rule('/dashboard/edit_post/<post>/',
+                view_func=EditPost.as_view('edit',
+                                            template_name='edit_post.html'))
+admin_portal.add_url_rule('/dashboard/database/',
                 view_func=EditPost.as_view('database',
                                             template_name='database.html'))
