@@ -23,7 +23,7 @@ def unique_post(form, field):
         else:
             get_field = Note.query.filter_by(**{field_name: field_value}).first()
         if get_field:
-            raise ValueError(f'{field.data} is already taken or in used')
+            raise ValidationError(f'{field.data} is already taken or in used')
     else:
         raise ValidationError('No post type specified')
 
@@ -36,10 +36,16 @@ class NewPostForm(FlaskForm):
     title = StringField(u'Title', validators=[InputRequired(),
                                             DataRequired(),
                                             unique_post])
-    descript = StringField(u'Short Summary', validators=[InputRequired(),
+    descript = StringField(u'Brief Summary', validators=[InputRequired(),
                                                         DataRequired()])
     doc = TextAreaField(u'Documentation', validators=[InputRequired(), DataRequired()])
     template = StringField(u'Html File', validators=[Optional(), unique_post])
     draft_submit = SubmitField(u'Save as Draft', validators=[Optional()])
     complete_submit = SubmitField(u'Publish', validators=[Optional()])
     cancel = SubmitField(u'Cancel', validators=[Optional()])
+
+class SelectPost(FlaskForm):
+    post = SelectField(u'Post', choices=[('projects', 'Project'),
+                                        ('notes', 'Note')])
+    title = SelectField(u'Title', choices=[], validators=[Optional()])
+    select = SubmitField(u'Select')
