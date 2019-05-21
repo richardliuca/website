@@ -1,31 +1,38 @@
 {% extends "dashboard.html" %}
 
-
-
 {% block dashboard_content %}
   <form class="" action="" method="POST">
     {{ form.hidden_tag() }}
-    <fieldset>
+    <fieldset class="form-group">
       <div class="form-group">
         <div class="row">
-          <div class="form-group col-md-6 mb-0">
+          <div class="form-group col-md-2 mb-0">
             {{ form.post.label(class="form-control-label form-control-lg") }}
           </div>
-          <div class="form-group col-md-3  mb-0">
+          <div class="form-group col-md-5  mb-0">
             {{ form.category.label(class="form-control-label form-control-lg") }}
           </div>
-          <div class="form-group col-md-3  mb-0"></div>
+          <div class="form-group col-md-5  mb-0"></div>
         </div>
 
         <div class="row">
-          <div class="form-group col-md-6 mb-0">
+          <div class="form-group col-md-2 mb-0">
             {{ form.post(class="form-control form-control-sm") }}
           </div>
-          <div class="form-group col-md-3 mb-0">
+          <div class="form-group col-md-5 mb-0">
             {{ form.category(class="form-control form-control-sm") }}
           </div>
-          <div class="form-group col-md-3 mb-0">
-            {{ form.new_category(class="form-control form-control-sm", placeholder="New Category") }}
+          <div class="form-group col-md-5 mb-0">
+            {% if form.new_category.errors %}
+              {{ form.new_category(class="form-control form-control-sm is-invalid", placeholder="New Category") }}
+              <div class="invalid-feedback">
+                {% for error in form.new_category.errors %}
+                  <span>{{ error }}</span>
+                {% endfor %}
+              </div>
+            {% else %}
+              {{ form.new_category(class="form-control form-control-sm", placeholder="New Category") }}
+            {% endif %}
           </div>
         </div>
       </div>
