@@ -15,7 +15,7 @@ def reset_database():
     create_admin()
 
 def create_admin():
-    from portfolio import Admin
+    from portfolio.models import Admin
     from portfolio import bcrypt
 
     file_path = os.path.join(app.instance_path, 'admin.json')
