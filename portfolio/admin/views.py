@@ -69,46 +69,39 @@ class NewPost(GeneralMethodView):
         return super().get(title='New Post', form=self._form)
 
     def post(self):
+        category_choices = _get_category(self._form.post.data).get_json()
+        for key, val in category_choices.items():
+            self._form.category.choices.append((val, key))
+
         if self._form.validate_on_submit():
-            complete = False
-            category = None
             if self._form.cancel.data:
                 flash('New post cancelled', 'info')
                 return redirect(url_for('admin_portal.dashboard'))
-            elif self._form.draft_submit.data:
-                flash('New post drafted', 'info')
-            elif self._form.complete_submit.data:
-                flash('New post publish', 'info')
-                complete = True
             else:
-                flash('Error has occurred', 'danger')
+                complete = True if self._form.complete_submit.data else False
 
             if self._form.new_category.data:
                 category = self._form.new_category.data.lower()
             elif self._form.category.data:
                 category = self._form.category.data
             else:
-                pass
+                category = None
 
-            template = self._form.template.data if self._form.template.data else None
+
+            template = self._form.template.data
+            template = template if template else None
 
             if self._form.post.data:
+                kwargs = {'complete': complete,
+                        'title': self._form.title.data,
+                        'category': category,
+                        'description': self._form.descript.data,
+                        'template': template,
+                        'lead': current_user}
                 if self._form.post.data == 'projects':
-                    new = Project(complete=complete,
-                                    title=self._form.title.data,
-                                    category=category,
-                                    description=self._form.descript.data,
-                                    documentation=self._form.doc.data,
-                                    template=template,
-                                    lead=current_user)
+                    new = Project(**kwargs)
                 elif self._form.post.data == 'notes':
-                    new = Note(complete=complete,
-                                    title=self._form.title.data,
-                                    category=category,
-                                    description=self._form.descript.data,
-                                    documentation=self._form.doc.data,
-                                    template=template,
-                                    author=current_user)
+                    new = Note(**kwargs)
                 else:
                     pass
 
@@ -119,7 +112,7 @@ class NewPost(GeneralMethodView):
                 return redirect(url_for('admin_portal.new_post'))
             return redirect(url_for('admin_portal.dashboard'))
         else:
-            pass
+            print(self._form.errors)
         return super().post(title='New Post', form=self._form)
 
 class EditPost(GeneralMethodView):
@@ -127,41 +120,116 @@ class EditPost(GeneralMethodView):
 
     def __init__(self, template_name):
         super().__init__(template_name)
-        self._form = forms.NewPostForm()
-        self._select_form = forms.SelectPost()
+        self._form = forms.SelectPost()
 
     def get(self, **kwargs):
         if not kwargs:
-            return super().get(title='Edit Post', form=self._select_form)
+            return super().get(title='Edit Post', form=self._form)
         else:
+            self.add_title_choices(kwargs['post'])
+
+            self.add_category_choices(kwargs['post'])
             post_id = request.args.get('id', None)
+
+            if not(self._form.id_title.data) or
+                                            self._form.id_title.data == 'None':
+                abort(404)
+
             if kwargs['post'] == 'projects' and post_id:
                 post = Project.query.get(post_id)
-                return super().get(title=f'Edit {id}',
-                                    form=self._form,
-                                    post_id=kwargs['post'])
             elif kwargs['post'] == 'notes' and post_id:
                 post = Note.query.get(post_id)
-                return super().get(title=f'Edit {id}',
-                                    form=self._form,
-                                    post_id=kwargs['post'])
             else:
                 abort(404)
 
-    def post(self):
-        if self._select_form.validate_on_submit():
+            self._form.post.data = kwargs['post']
+            self._form.id_title.data = post_id
+            self._form.category.data = post.category
+            self._form.title.data = post.title
+            self._form.descript.data = post.description
+            self._form.doc.data = post.documentation
+            self._form.template.data = post.template
+            return super().get(title=f'Edit {post.title}', form=self._form)
+
+    def post(self, **kwargs):
+        self.add_title_choices(self._form.post.data)
+        if kwargs:
+            self.add_category_choices(kwargs['post'])
+            post_id = request.args.get('id', None)
+
+        if self._form.validate_on_submit():
+            if not(post_id):
+                abort(404)
+            elif kwargs['post'] == 'projects':
+                post = Project.query.get(post_id)
+            elif kwargs['post'] == 'notes':
+                post = Note.query.get(post_id)
+
+            if self._form.cancel.data:
+                db.session.delete(post)
+                db.session.commit()
+                flash('Post deleted', 'success')
+                return redirect(url_for('admin_portal.edit_post'))
+            elif self._form.draft_submit.data:
+                post.complete = False
+            elif self._form.complete_submit.data:
+                post.complete = True
+            elif self._form.select.data:
+                return redirect(url_for('admin_portal.edit',
+                                        post=self._form.post.data,
+                                        id=self._form.id_title.data))
+
+            if self._form.new_category.data:
+                category = self._form.new_category.data.lower()
+            elif self._form.category.data:
+                category = self._form.category.data
+            else:
+                category = None
+
+            template = self._form.template.data
+            template = template if template else None
+
+            post.title = self._form.title.data
+            post.category = category
+            post.description = self._form.descript.data
+            post.documentation = self._form.doc.data
+            post.template = template
+            db.session.commit()
+            flash('Post modified', 'success')
             return redirect(url_for('admin_portal.dashboard'))
-        elif self._form.validate_on_submit():
-            return redirect(url_for('admin_portal.dashboard'))
+        elif self._form.select.data:
+            if not(self._form.id_title.data) or
+                                            self._form.id_title.data == 'None':
+                abort(404)
+            return redirect(url_for('admin_portal.edit',
+                                    post=self._form.post.data,
+                                    id=self._form.id_title.data))
         else:
-            pass
-        return redirect(url_for('front_page.home'))
+            print(self._form.errors)
 
+        if kwargs:
+            return super().post(title=f'Edit {self._form.title.data}',
+                                form=self._form)
+        else:
+            return redirect(url_for('admin_portal.edit_post'))
 
-class Database(GeneralView):
-    pass
+    def add_title_choices(self, post_type):
+        title_choices = _get_title(post_type).get_json()
+        title_total = []
+        for key, val in title_choices.items():
+            title_total.append((str(val), key))
+        self._form.id_title.choices = title_total
 
-def get_category(post):
+    def add_category_choices(self, post_type):
+        category_choices = _get_category(post_type).get_json()
+        choices_total = []
+        for key, val in category_choices.items():
+            choices_total.append((val, key))
+        self._form.category.choices = choices_total
+
+def _get_category(alt_get=None):
+    post = request.args.get('post', None)
+    post = post if post else alt_get
     category = []
     output_category = {}
     if post == 'projects':
@@ -169,14 +237,16 @@ def get_category(post):
     elif post == 'notes':
         category = db.session.query(Note.category).all()
     else:
-        pass
+        return jsonify(result=None)
     none_sort = lambda pair: pair[0] != 'None'
     pre_json = set(filter(none_sort, category))
     for pair in pre_json:
         output_category.update({pair[0].title(): pair[0]})
     return jsonify(**output_category)
 
-def get_title(post):
+def _get_title(alt_get=None):
+    post = request.args.get('post', None)
+    post = post if post else alt_get
     title = []
     output_title = {}
     if post == 'projects':
@@ -184,7 +254,7 @@ def get_title(post):
     elif post == 'notes':
         title = db.session.query(Note.title, Note.id).all()
     else:
-        pass
+        return jsonify(result=None)
     for pair in title:
         output_title.update({pair[0]: pair[1]})
     return jsonify(**output_title)

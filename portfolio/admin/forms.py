@@ -44,8 +44,6 @@ class NewPostForm(FlaskForm):
     complete_submit = SubmitField(u'Publish', validators=[Optional()])
     cancel = SubmitField(u'Cancel', validators=[Optional()])
 
-class SelectPost(FlaskForm):
-    post = SelectField(u'Post', choices=[('projects', 'Project'),
-                                        ('notes', 'Note')])
-    title = SelectField(u'Title', choices=[], validators=[Optional()])
+class SelectPost(NewPostForm):
+    id_title = SelectField(u'Title', choices=[], validators=[Optional()])
     select = SubmitField(u'Select')
