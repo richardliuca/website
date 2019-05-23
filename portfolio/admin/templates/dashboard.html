@@ -5,87 +5,83 @@
 {% endblock style %}
 
 {% block body %}
-<div class="container-fluid">
-  <div class="row">
-    <aside class="col-md-2 d-none d-md-block bg-light sidebar">
-      <div class="sidebar-sticky">
+  <div class="container-fluid">
+    <div class="row">
+      <aside class="col-md-2 d-none d-md-block bg-light sidebar">
+        <div class="sidebar-sticky">
 
-        <ul class="nav flex-column">
-          <li class="nav-item">
-            <a class="nav-link active" href="{{ url_for('admin_portal.dashboard') }}">
-              <i data-feather="home"></i> Dashboard
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('admin_portal.new_post') }}">
-              <span data-feather="file"></span>
-              New Post
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('admin_portal.edit_post') }}">
-              <i data-feather="edit"></i>
-              Edit Post
-            </a>
-          </li>
-        </ul>
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link" id="Dashboard" href="{{ url_for('admin_portal.dashboard') }}">
+                <i data-feather="home"></i> Dashboard
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="New-Post" href="{{ url_for('admin_portal.new_post') }}">
+                <span data-feather="file"></span>
+                New Post
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="Edit-Post" href="{{ url_for('admin_portal.edit_post') }}">
+                <i data-feather="edit"></i>
+                Edit Post
+              </a>
+            </li>
+          </ul>
 
-        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-          <span>Analytic</span>
-          <span class="d-flex align-items-center text-muted" href="#">
-            <i data-feather="bar-chart"></i>
-          </span>
-        </h6>
-        <ul class="nav flex-column mb-2">
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <i data-feather="file-text"></i>
-              Current Month
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <i data-feather="bar-chart-2"></i>
-              Current Year
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <i data-feather="share-2"></i>
-              Social engagement
-            </a>
-          </li>
-        </ul>
+          <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+            <span>Analytic</span>
+            <span class="d-flex align-items-center text-muted" href="#">
+              <i data-feather="bar-chart"></i>
+            </span>
+          </h6>
+          <ul class="nav flex-column mb-2">
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <i data-feather="file-text"></i>
+                Current Month
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <i data-feather="bar-chart-2"></i>
+                Current Year
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <i data-feather="share-2"></i>
+                Social engagement
+              </a>
+            </li>
+          </ul>
 
-      </div>
-    </aside>
-
-    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        {% if title %}
-          <h1 class="h2">{{ title }}</h1>
-        {% else %}
-          <h1 class="h2">Dashboard</h1>
-        {% endif %}
-        <div class="btn-toolbar mb-2 mb-md-0">
-          <div class="btn-group mr-2">
-            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-          </div>
-          <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-            <span data-feather="calendar"></span>
-            This week
-          </button>
         </div>
-      </div>
+      </aside>
 
-      {% block dashboard_content %}{% endblock dashboard_content %}
+      <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          {% if title %}
+            <h1 class="h2">{{ title }}</h1>
+          {% else %}
+            <h1 class="h2">Dashboard</h1>
+          {% endif %}
+          <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group mr-2">
+              <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
+              <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+              <span data-feather="calendar"></span>
+              This week
+            </button>
+          </div>
+        </div>
 
-    </main>
+        {% block dashboard_content %}{% endblock dashboard_content %}
+
+      </main>
+    </div>
   </div>
-</div>
 {% endblock body %}
-
-{% block script %}
-  <script type="text/javascript" src="{{ url_for('admin_portal.static', filename='js/dashboard.js') }}"></script>
-{% endblock script %}
