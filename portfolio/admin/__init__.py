@@ -1,6 +1,6 @@
 from flask import Blueprint
 from portfolio.admin.views import Login, Logout, Dashboard, NewPost, EditPost,\
-                                Database, _get_category, _get_title
+                                _get_category, _get_title
 
 admin_portal = Blueprint('admin_portal', __name__,
                         template_folder='templates',

@@ -96,6 +96,7 @@ class NewPost(GeneralMethodView):
                         'title': self._form.title.data,
                         'category': category,
                         'description': self._form.descript.data,
+                        'documentation': self._form.doc.data,
                         'template': template,
                         'lead': current_user}
                 if self._form.post.data == 'projects':
@@ -104,7 +105,7 @@ class NewPost(GeneralMethodView):
                     new = Note(**kwargs)
                 else:
                     pass
-
+                flash('Post Saved', 'success')
                 db.session.add(new)
                 db.session.commit()
             else:
@@ -130,10 +131,6 @@ class EditPost(GeneralMethodView):
 
             self.add_category_choices(kwargs['post'])
             post_id = request.args.get('id', None)
-
-            if not(self._form.id_title.data) or
-                                            self._form.id_title.data == 'None':
-                abort(404)
 
             if kwargs['post'] == 'projects' and post_id:
                 post = Project.query.get(post_id)
@@ -198,8 +195,9 @@ class EditPost(GeneralMethodView):
             flash('Post modified', 'success')
             return redirect(url_for('admin_portal.dashboard'))
         elif self._form.select.data:
-            if not(self._form.id_title.data) or
+            if not(self._form.id_title.data) or \
                                             self._form.id_title.data == 'None':
+                print('aborting in post')
                 abort(404)
             return redirect(url_for('admin_portal.edit',
                                     post=self._form.post.data,
