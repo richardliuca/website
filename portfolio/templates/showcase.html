@@ -42,7 +42,11 @@
                         {% endif %}
                       </div>
                       {% if not(post.category == 'none') %}
-                        <small class="text-muted font-weight-bold"> <a href="#">{{ post.category }}</a> </small>
+                        {% if source == 'projects' %}
+                          <small class="text-muted font-weight-bold"> <a href="{{ url_for('project_hub.hub', category=post.category) }}">{{ post.category }}</a> </small>
+                        {% elif source == 'notes' %}
+                          <small class="text-muted font-weight-bold"> <a href="{{ url_for('notebook.notebook', category=post.category) }}">{{ post.category }}</a> </small>
+                        {% endif %}
                       {% endif %}
                     </div>
                   </div>
