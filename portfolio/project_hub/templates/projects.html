@@ -1,10 +1,9 @@
 {% extends "showcase.html" %}
 
-{% block style %}
-<link rel="stylesheet" href="{{ url_for('project_hub.static', filename='css/projects.css') }}">
-{% endblock style %}
+{% block showcase_style %}
+{% endblock showcase_style %}
 
 {% block jumbo_header %}
   <h1 class="jumbotron-heading">Personal Projects</h1>
-  <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it entirely.</p>
+  <p class="lead">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it entirely.</p>
 {% endblock jumbo_header %}
