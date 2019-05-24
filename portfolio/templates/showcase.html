@@ -53,29 +53,34 @@
           </div>
           <div class="row rounded">
             <div class="col">
+              <ul class="pagination pagination-lg">
+                {% if catalog.has_prev %}
+                  <li class="page-item active">
+                    {% if source == 'projects' %}
+                      <a class="page-link" href="{{ url_for('project_hub.hub', page=catalog.prev_num)}}">{{catalog.prev_num}}/{{catalog.pages}} Previous</a>
+                    {% elif source == 'notes' %}
+                      <a class="page-link" href="{{ url_for('notebook.notebook', page=catalog.prev_num)}}">{{catalog.prev_num}}/{{catalog.pages}} Previous</a>
+                    {% endif %}
+                  </li>
+                {% else %}
+                {% endif %}
+              </ul>
             </div>
             <div class="col-md-6 d-flex justify-content-center">
-              {% for page_num in catalog.iter_pages(left_edge=2, right_edge=2, left_current=3, right_current=4) %}
-                {% if page_num %}
-                  {% if catalog.page == page_num %}
-                    {% if source == 'projects' %}
-                      <a class="btn btn-info mb-4" href="{{ url_for('project_hub.hub', page=page_num) }}">{{ page_num }}</a>
-                    {% elif source == 'notes' %}
-                      <a class="btn btn-info mb-4" href="{{ url_for('notebook.notebook', page=page_num) }}">{{ page_num }}</a>
-                    {% endif %}
-                  {% else %}
-                    {% if source == 'projects' %}
-                      <a class="btn btn-outline-info mb-4" href="{{ url_for('project_hub.hub', page=page_num) }}">{{ page_num }}</a>
-                    {% elif source == 'notes' %}
-                      <a class="btn btn-outline-info mb-4" href="{{ url_for('notebook.notebook', page=page_num) }}">{{ page_num }}</a>
-                    {% endif %}
-                  {% endif %}
-                {% else %}
-                  ...
-                {% endif %}
-              {% endfor %}
             </div>
             <div class="col">
+              <ul class="pagination pagination-lg justify-content-end">
+                {% if catalog.has_next %}
+                  <li class="page-item active">
+                    {% if source == 'projects' %}
+                      <a class="page-link" href="{{ url_for('project_hub.hub', page=catalog.next_num)}}">{{catalog.next_num}}/{{catalog.pages}} Next</a>
+                    {% elif source == 'notes' %}
+                      <a class="page-link" href="{{ url_for('notebook.notebook', page=catalog.next_num)}}">{{catalog.next_num}}/{{catalog.pages}} Next</a>
+                    {% endif %}
+                  </li>
+                {% else %}
+                {% endif %}
+              </ul>
             </div>
           </div>
         {% endif %}
