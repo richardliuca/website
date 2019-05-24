@@ -42,44 +42,47 @@
             {% endif %}
           </div>
         </div>
-        <div class="form-group">
-          {{ form.title.label(class="form-control-label form-control-lg") }}
-          {% if form.title.errors %}
-            {{ form.title(class="form-control is-invalid", placeholder="Title") }}
-            <div class="invalid-feedback">
-              {% for error in form.title.errors %}
-                <span>{{ error }}</span>
-              {% endfor %}
-            </div>
-          {% else %}
-            {{ form.title(class="form-control", placeholder="Title") }}
-          {% endif %}
-        </div>
-        <div class="form-group">
-          {{ form.descript.label(class="form-control-label form-control-lg") }}
-          {% if form.descript.errors %}
-            {{ form.descript(class="form-control is-invalid", placeholder="Brief Summary") }}
-            <div class="invalid-feedback">
-              {% for error in form.descript.errors %}
-                <span>{{ error }}</span>
-              {% endfor %}
-            </div>
-          {% else %}
-            {{ form.descript(class="form-control", placeholder="Brief Summary") }}
-          {% endif %}
+
+        <div class="form-row">
+          <div class="col-md-4">
+            {{ form.title.label(class="form-control-label form-control-lg") }}
+            {% if form.title.errors %}
+              {{ form.title(class="form-control is-invalid", placeholder="Title") }}
+              <div class="invalid-feedback">
+                {% for error in form.title.errors %}
+                  <span>{{ error }}</span>
+                {% endfor %}
+              </div>
+            {% else %}
+              {{ form.title(class="form-control", placeholder="Title") }}
+            {% endif %}
+          </div>
+          <div class="col-md-8">
+            {{ form.descript.label(class="form-control-label form-control-lg") }}
+            {% if form.descript.errors %}
+              {{ form.descript(class="form-control is-invalid", placeholder="Brief Summary") }}
+              <div class="invalid-feedback">
+                {% for error in form.descript.errors %}
+                  <span>{{ error }}</span>
+                {% endfor %}
+              </div>
+            {% else %}
+              {{ form.descript(class="form-control", placeholder="Brief Summary") }}
+            {% endif %}
+          </div>
         </div>
 
         <div class="form-group">
           {{ form.doc.label(class="form-control-label form-control-lg") }}
           {% if form.doc.errors %}
-            {{ form.doc(class="form-control is-invalid", placeholder="Documentation") }}
+            {{ form.doc(class="form-control is-invalid", placeholder="Documentation", rows="10") }}
             <div class="invalid-feedback">
               {% for error in form.doc.errors %}
                 <span>{{ error }}</span>
               {% endfor %}
             </div>
           {% else %}
-            {{ form.doc(class="form-control", placeholder="Documentation") }}
+            {{ form.doc(class="form-control", placeholder="Documentation", rows="10") }}
           {% endif %}
         </div>
 
