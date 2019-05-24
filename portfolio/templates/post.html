@@ -1,11 +1,32 @@
 {% extends "layout.html" %}
 
+{% block style %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/post.css') }}">
+{% endblock style %}
+
 {% block body %}
-  {{ title }}
-  <br>
-  {{ post_title }}
-  <br>
-  {{ post_category }}
-  <br>
-  {{ post_content }}
+  <main role="main" class="container">
+    <div class="blog-main rounded my-4 shadow">
+
+      <div class="blog-post rounded px-4 py-4">
+        <h1 class="blog-post-title">{{ post_title }}</h1>
+        <div class="row blog-post-meta">
+            <div class="col-md-6 text-left">
+              <span class="text-muted">{{ post_date }}</span>
+              <span>by Richard Liu</span>
+            </div>
+            <div class="col-md-6 text-right">
+              {% if not(post_category == 'none') %}
+                <span>{{ post_category }}</span>
+              {% endif %}
+            </div>
+        </div>
+        <hr>
+        <p>
+          {{ post_content }}
+        </p>
+      </div>
+
+    </div>
+  </main>
 {% endblock body%}

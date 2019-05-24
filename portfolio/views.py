@@ -68,5 +68,6 @@ class PostView(GeneralView):
         else:
             return super().dispatch_request(title=title,
                                             post_title=post.title,
+                                            post_date=post.date_posted.strftime("%B, %w %Y"),
                                             post_content=post.documentation,
                                             post_category=post.category)
