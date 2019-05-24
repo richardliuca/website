@@ -5,7 +5,5 @@ from portfolio.catalog import Catalog
 class Hub(GeneralView):
 
     def dispatch_request(self):
-        book_keeping = Catalog(source='projects')
-        return super().dispatch_request(title='Project Hub',
-                                        num=book_keeping.num,
-                                        modules=book_keeping.property_list)
+        post_catalog = Catalog(source='projects')
+        return super().dispatch_request(title='Project Hub', catalog=post_catalog)

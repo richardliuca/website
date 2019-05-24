@@ -1,6 +1,8 @@
-from flask import render_template, abort, send_from_directory, current_app
+from flask import render_template, request, abort, \
+                send_from_directory, current_app
 from jinja2 import TemplateNotFound
 from flask.views import View, MethodView
+from portfolio.models import Project, Note
 import os.path as path
 
 class GeneralView(View):
@@ -46,5 +48,25 @@ class FilesView(View):
         except:
             abort(404)
 
-class PostView(MethodView):
-    pass
+class PostView(GeneralView):
+
+    def dispatch_request(self, **kwargs):
+        id = request.args.get('id', None)
+        if not(kwargs):
+            abort(404)
+        elif kwargs['post'] == 'projects':
+            post = Project.query.get(id) if id else None
+            title = 'Project Hub'
+        elif kwargs['post'] == 'notes':
+            post = Note.query.get(id) if id else None
+            title = 'Notebook'
+        else:
+            abort(404)
+
+        if not(post):
+            abort(404)
+        else:
+            return super().dispatch_request(title=title,
+                                            post_title=post.title,
+                                            post_content=post.documentation,
+                                            post_category=post.category)
