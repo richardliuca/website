@@ -1,21 +1,23 @@
 {% extends "layout.html" %}
 
+{% block style %}
+ <link rel="stylesheet" href="{{ url_for('static', filename='css/showcase.css') }}">
+ {% block showcase_style %}{% endblock showcase_style %}
+{% endblock style %}
+
 {% block body %}
-  <main role="main">
-    <section class="jumbotron text-center">
+  <main role="main" class="container">
+    <section class="jumbotron text-center text-white rounded my-4 bg-dark shadow">
       <div class="container">
-        {% block jumbo_header %}
-          <!-- <h1 class="jumbotron-heading">Personal Projects</h1>
-          <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it entirely.</p> -->
-        {% endblock jumbo_header %}
+        {% block jumbo_header %}{% endblock jumbo_header %}
       </div>
     </section>
 
-    <div class="album py-5 bg-light">
+    <div class="album py-5 bg-light rounded  shadow">
       <div class="container">
-        <div class="row">
-          {% if catalog %}
-            {% for i in range(catalog.count) %}
+        {% if catalog %}
+          <div class="row rounded">
+            {% for post in catalog.items %}
               <div class="col-md-4">
                 <div class="card mb-4 shadow-sm">
 
@@ -25,25 +27,58 @@
                   </svg>
 
                   <div class="card-body">
-                    <h5>{{ catalog.post[i].title }}</h5>
-                    <p class="card-text">{{ catalog.post[i].description }}</p>
+                    <h5 class="text-truncate">{{ post.title }}</h5>
+                    <span class="text-muted">{{ post.date_posted.strftime("%B, %w %Y") }}</span>
+                    <p class="card-text">{{ post.description }}</p>
                     <div class="d-flex justify-content-between align-items-center">
                       <div class="btn-group">
-                          <button type="button" class="btn btn-sm btn-outline-secondary"> <a href="#">More</a> </button>
+                        {% if source == 'projects' %}
+                          <a href="{{ url_for('project_hub.proj_post', post=source, id=post.id)}}" class="btn btn-sm btn-outline-primary">Read More</a>
+                        {% elif source == 'notes' %}
+                          <a href="{{ url_for('notebook.note_post', post=source, id=post.id) }}" class="btn btn-sm btn-outline-primary">Read More</a>
+                        {% endif %}
                         {% if current_user.is_authenticated %}
-                          <button type="button" class="btn btn-sm btn-outline-secondary"> <a href="#">Edit</a> </button>
+                          <a href="#" class="btn btn-sm btn-outline-success">Edit</a>
                         {% endif %}
                       </div>
-                      <small class="text-muted"> <a href="#">{{ catalog.post[i].category }}</a> </small>
+                      {% if not(post.category == 'none') %}
+                        <small class="text-muted font-weight-bold"> <a href="#">{{ post.category }}</a> </small>
+                      {% endif %}
                     </div>
                   </div>
 
                 </div>
               </div>
             {% endfor %}
-          {% endif %}
-        </div>
-
+          </div>
+          <div class="row rounded">
+            <div class="col">
+            </div>
+            <div class="col-md-6 d-flex justify-content-center">
+              {% for page_num in catalog.iter_pages(left_edge=2, right_edge=2, left_current=3, right_current=4) %}
+                {% if page_num %}
+                  {% if catalog.page == page_num %}
+                    {% if source == 'projects' %}
+                      <a class="btn btn-info mb-4" href="{{ url_for('project_hub.hub', page=page_num) }}">{{ page_num }}</a>
+                    {% elif source == 'notes' %}
+                      <a class="btn btn-info mb-4" href="{{ url_for('notebook.notebook', page=page_num) }}">{{ page_num }}</a>
+                    {% endif %}
+                  {% else %}
+                    {% if source == 'projects' %}
+                      <a class="btn btn-outline-info mb-4" href="{{ url_for('project_hub.hub', page=page_num) }}">{{ page_num }}</a>
+                    {% elif source == 'notes' %}
+                      <a class="btn btn-outline-info mb-4" href="{{ url_for('notebook.notebook', page=page_num) }}">{{ page_num }}</a>
+                    {% endif %}
+                  {% endif %}
+                {% else %}
+                  ...
+                {% endif %}
+              {% endfor %}
+            </div>
+            <div class="col">
+            </div>
+          </div>
+        {% endif %}
       </div>
     </div>
 

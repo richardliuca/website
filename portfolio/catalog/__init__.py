@@ -9,17 +9,19 @@ class Catalog(object):
     num = 0
     property_list = []
 
-    def __init__(self, source=None):
+    def __init__(self, source=None, page=1):
         if source is not None:
             proj_dir = Path(current_app.instance_path).joinpath(source)
 
         if source == 'projects':
-            self.post = db.session.query(Project).all()
+            self.posts = Project.query.order_by(Project.date_posted.desc()).paginate(page=page, per_page=9)
         elif source == 'notes':
-            self.post = db.session.query(Note).all()
+            self.posts = Note.query.order_by(Note.date_posted.desc()).paginate(page=page, per_page=9)
         else:
             raise Exception('Wrong post type')
-        self.count = len(self.post)
+
+
+
             # try:
             #     for folder in os.listdir(proj_dir):
             #         if folder.startswith('__'):
