@@ -69,10 +69,6 @@
           <li class="nav-item">
             <a class="nav-link" id="Notebook" href="{{ url_for('notebook.notebook') }}">Notebook</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" id="About-Me" href="{{ url_for('front_page.about') }}">About</a>
-          </li>
-
           {% if current_user.is_authenticated %}
           <li class="nav-item">
             <a class="nav-link" id="Dashboard" href="{{ url_for('admin_portal.dashboard') }}">Dashboard</a>

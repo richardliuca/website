@@ -7,7 +7,7 @@ $(document).ready(function() {
     $(".alert-info").slideUp(500);
   });
   var title = $("title").html();
-  if (title == "Home" || title == "Project Hub" || title == "About Me" ||
+  if (title == "Home" || title == "Project Hub" ||
       title == "Dashboard" || title == "Notebook" ||
       title == "New Post" || title == "Edit Post") {
     $("a.nav-link").removeClass("active");

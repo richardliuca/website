@@ -18,7 +18,3 @@ class Home(GeneralView):
         except:
             pass
         return super().dispatch_request(title='Home', cover=cover_path)
-
-class About(GeneralView):
-        def dispatch_request(self):
-            return super().dispatch_request(title='About Me')
