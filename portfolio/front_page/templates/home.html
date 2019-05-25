@@ -1,5 +1,9 @@
 {% extends "layout.html" %}
 
+{% block meta %}
+  <META NAME="ROBOTS" CONTENT="INDEX, FOLLOW">
+{% endblock meta %}
+
 {% block static %}
   <span id="cover" style="display: none;">{{ cover }}</span>
 {% endblock static %}
@@ -11,11 +15,11 @@
 {% block header %}{% endblock header %}
 
 {% block body %}
-<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+<section class="jumbotron jumbotron-fluid d-flex flex-column">
   <div class="masthead mb-auto">
     <div class="inner">
-      <h3 class="masthead-brand">Richard Liu</h3>
       <nav class="nav nav-masthead justify-content-center">
+        <h3 class="masthead-brand mx-4">Richard Liu</h3>
         <a class="nav-link" id="Home" href="{{ url_for('front_page.home') }}">Home</a>
         <a class="nav-link" id="Projects-Hub" href="{{ url_for('project_hub.hub') }}">Project Hub</a>
         <a class="nav-link" id="Notebook" href="{{ url_for('notebook.notebook') }}">Notebook</a>
@@ -27,20 +31,40 @@
       </nav>
     </div>
   </div>
-  <main role="main" class="inner cover">
-    <h1 class="cover-heading">Cover your page.</h1>
-    <p class="lead">Cover is a one-page template for building simple and beautiful home pages. Download, edit the text, and add your own fullscreen background photo to make it your own.</p>
-    <p class="lead">
-      <a href="#" class="btn btn-lg btn-secondary">Learn more</a>
-    </p>
-  </main>
+  <div class="container-fluid text-center my-auto">
+    <h1 class="display-4">Fluid jumbotron</h1>
+    <p class="lead">This is a modified jumbotron that occupies the entire horizontal space of its parent.</p>
+  </div>
+  <div class="social mt-auto">
+    <div class="d-flex justify-content-center">
+      <div class="list-group list-group-horizontal" style="list-style-type: none;">
+        <a class="px-2" href="#"><i data-feather="linkedin"></i></a>
+        <a class="px-2" href="#"><i data-feather="github"></i></a>
+        <a class="px-2" href="#"><i data-feather="twitter"></i></a>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="container text-justify">
+  <h1>This is another secion</h1>
+  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+</section>
 
-  <footer class="mastfoot mt-auto">
-    <div class="inner">
-      <p>Personal Portfolio</p>
+  <footer class="footer mt-auto py-3 text-justify">
+    <div class="container" id="footer">
+      <div class="row">
+        <div class="col-md-8 text-light">
+          <h2>Contact Me @</h2>
+          <p><i data-feather="send"></i> richardliu.inquiry@gmail.com</p>
+          <p><i data-feather="phone"></i> ‪(626) 340-0352‬</p>
+        </div>
+        <div class="col-md-4 align-self-end">
+          <small class="text-muted">Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" 			    title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" 			    title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></small>
+        </div>
+      </div>
     </div>
   </footer>
-</div>
 {% endblock body %}
 
 {% block script %}

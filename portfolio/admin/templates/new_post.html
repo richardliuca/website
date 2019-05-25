@@ -1,4 +1,7 @@
 {% extends "dashboard.html" %}
+{% block meta %}
+  <META NAME="ROBOTS" CONTENT="NOINDEX, FOLLOW">
+{% endblock meta %}
 
 {% block static %}
   <span id="category_url" style="display: none;">{{ url_for('admin_portal.get_category', _external=True) }}</span>

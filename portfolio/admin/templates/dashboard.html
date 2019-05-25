@@ -1,4 +1,7 @@
 {% extends "layout.html" %}
+{% block meta %}
+  <META NAME="ROBOTS" CONTENT="NOINDEX, FOLLOW">
+{% endblock meta %}
 
 {% block style %}
   <link rel="stylesheet" href="{{ url_for('admin_portal.static', filename='css/dashboard.css') }}">

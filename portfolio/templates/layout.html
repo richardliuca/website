@@ -2,7 +2,23 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <meta name="description" content="This is my website where sometimes I upload projects that I did or notes that I've collected.">
+    <meta name="author" content="Richard Liu">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta property="og:site_name" content="Richard Liu">
+    <meta property="og:title" content="Personal Portfolio">
+    <meta property="og:description" content="A place to showcase my projects and notes">
+    <meta property="og:image" content="">
+    <meta property="og:url" content="{{ url_for('front_page.home', _external=True) }}">
+    <meta name="twitter:site" content="Richard Liu" >
+    <meta name="twitter:title" content="Personal Portfolio">
+    <meta name="twitter:description" content="A place to showcase my projects and notes.">
+    <meta name="twitter:image" content="">
+    <meta name="twitter:card" content="summary">
+
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% block meta %}
+    {% endblock meta %}
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/lib/bootstrap.min.css') }}">
     <script type="text/javascript" src="{{ url_for('static', filename='js/lib/feather.min.js') }}"></script>

@@ -1,4 +1,7 @@
 {% extends "layout.html" %}
+{% block meta %}
+  <META NAME="ROBOTS" CONTENT="INDEX, FOLLOW">
+{% endblock meta %}
 
 {% block style %}
   <link rel="stylesheet" href="{{ url_for('front_page.static', filename='css/about.css') }}">
@@ -44,7 +47,7 @@
           <p><i data-feather="send"></i> richardliu.inquiry@gmail.com</p>
           <p><i data-feather="phone"></i> ‪(626) 340-0352‬</p>
         </div>
-        <div class="col-md-4 text-right">
+        <div class="col-md-4 align-self-end">
           <small class="text-muted">Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" 			    title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" 			    title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></small>
         </div>
       </div>

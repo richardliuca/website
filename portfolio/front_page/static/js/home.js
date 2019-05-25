@@ -1,11 +1,12 @@
 $(document).ready(function(){
   $("body").addClass("text-center");
-  $("body").css({
+  $(".jumbotron").css({
     "background-image": `url(${$("#cover").html()})`,
-    "background-position": "center",
+    "background-position": "center center fixed",
     "background-repeat": "no-repeat",
     "background-size": "cover",
+    "-webkit-background-size": "cover",
+    "-moz-background-size": "cover",
+    "-o-background-size": "cover",
   });
-  console.log(typeof $("#cover").html());
-  console.log($("body").css("background-color"));
 })
