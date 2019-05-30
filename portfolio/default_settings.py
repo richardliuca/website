@@ -10,12 +10,7 @@ class Config(object):
     SECRET_KEY = token
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     INSTANCE_STRUCTURE = [
-        'static/About',
-        'static/Home',
-        'static/Projects',
-        'static/Notes',
-        'notes',
-        'projects'
+        'static/',
     ]
 
 class DevelopmentConfig(Config):
