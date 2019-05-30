@@ -11,6 +11,16 @@ body {
   color: #fff;
 }
 
+section.jumbotron {
+  background-image: url(http://localhost:5000/front_page/static/cover.JPG);
+  background-position: center center fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+}
+
 .jumbotron {
   height: 90%;
 }
