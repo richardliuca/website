@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, current_user, login_required,\
                         fresh_login_required, login_fresh, confirm_login
 from portfolio.admin import forms
 from portfolio import db, bcrypt
-from portfolio.models import Admin, Project, Note
+from portfolio.models import Admin, Post
 from portfolio.views  import GeneralView, GeneralMethodView
 
 class Login(GeneralMethodView):
@@ -73,6 +73,8 @@ class NewPost(GeneralMethodView):
         for key, val in category_choices.items():
             self._form.category.choices.append((val, key))
 
+            print(self._form.category.choices)
+
         if self._form.validate_on_submit():
             if self._form.cancel.data:
                 flash('New post cancelled', 'info')
@@ -83,28 +85,19 @@ class NewPost(GeneralMethodView):
             if self._form.new_category.data:
                 category = self._form.new_category.data.lower()
             elif self._form.category.data:
-                category = self._form.category.data
+                category = self._form.category.data.lower()
             else:
-                category = None
-
-
-            template = self._form.template.data
-            template = template if template else None
+                category = 'none'
 
             if self._form.post.data:
-                kwargs = {'complete': complete,
+                kwargs = {'post_type': self._form.post.data,
+                        'complete': complete,
                         'title': self._form.title.data,
                         'category': category,
                         'description': self._form.descript.data,
                         'documentation': self._form.doc.data,
-                        'template': template,
-                        'lead': current_user}
-                if self._form.post.data == 'projects':
-                    new = Project(**kwargs)
-                elif self._form.post.data == 'notes':
-                    new = Note(**kwargs)
-                else:
-                    pass
+                        'author': current_user}
+                new = Post(**kwargs)
                 flash('Post Saved', 'success')
                 db.session.add(new)
                 db.session.commit()
@@ -132,10 +125,8 @@ class EditPost(GeneralMethodView):
             self.add_category_choices(kwargs['post'])
             post_id = request.args.get('id', None)
 
-            if kwargs['post'] == 'projects' and post_id:
-                post = Project.query.get(post_id)
-            elif kwargs['post'] == 'notes' and post_id:
-                post = Note.query.get(post_id)
+            if post_id and not(post_id == 'None'):
+                post = Post.query.get(post_id)
             else:
                 abort(404)
 
@@ -145,7 +136,6 @@ class EditPost(GeneralMethodView):
             self._form.title.data = post.title
             self._form.descript.data = post.description
             self._form.doc.data = post.documentation
-            self._form.template.data = post.template
             return super().get(title=f'Edit {post.title}', form=self._form)
 
     def post(self, **kwargs):
@@ -157,10 +147,7 @@ class EditPost(GeneralMethodView):
         if self._form.validate_on_submit():
             if not(post_id):
                 abort(404)
-            elif kwargs['post'] == 'projects':
-                post = Project.query.get(post_id)
-            elif kwargs['post'] == 'notes':
-                post = Note.query.get(post_id)
+            post = Post.query.get(post_id)
 
             if self._form.cancel.data:
                 db.session.delete(post)
@@ -179,18 +166,14 @@ class EditPost(GeneralMethodView):
             if self._form.new_category.data:
                 category = self._form.new_category.data.lower()
             elif self._form.category.data:
-                category = self._form.category.data
+                category = self._form.category.data.lower()
             else:
-                category = None
-
-            template = self._form.template.data
-            template = template if template else None
+                category = 'none'
 
             post.title = self._form.title.data
             post.category = category
             post.description = self._form.descript.data
             post.documentation = self._form.doc.data
-            post.template = template
             db.session.commit()
             flash('Post modified', 'success')
             return redirect(url_for('admin_portal.dashboard'))
@@ -228,16 +211,14 @@ class EditPost(GeneralMethodView):
 def _get_category(alt_get=None):
     post = request.args.get('post', None)
     post = post if post else alt_get
-    category = []
     output_category = {}
-    if post == 'projects':
-        category = db.session.query(Project.category).all()
-    elif post == 'notes':
-        category = db.session.query(Note.category).all()
-    else:
-        return jsonify(result=None)
+    category = db.session.query(Post.category).filter_by(post_type=post).all()
+    # if not(category):
+    #     return jsonify(result=None)
+
     none_sort = lambda pair: pair[0] != 'None'
     pre_json = set(filter(none_sort, category))
+    pre_json = set(category)
     for pair in pre_json:
         output_category.update({pair[0].title(): pair[0]})
     return jsonify(**output_category)
@@ -245,14 +226,8 @@ def _get_category(alt_get=None):
 def _get_title(alt_get=None):
     post = request.args.get('post', None)
     post = post if post else alt_get
-    title = []
     output_title = {}
-    if post == 'projects':
-        title = db.session.query(Project.title, Project.id).all()
-    elif post == 'notes':
-        title = db.session.query(Note.title, Note.id).all()
-    else:
-        return jsonify(result=None)
+    title = db.session.query(Post.title, Post.id).filter_by(post_type=post).all()
     for pair in title:
         output_title.update({pair[0]: pair[1]})
     return jsonify(**output_title)

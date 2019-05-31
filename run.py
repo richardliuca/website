@@ -1,15 +1,16 @@
 import portfolio, os, json
 app = portfolio.create_app()
 
-# with app.app_context():
-#     portfolio.db.create_all()
-
 @app.cli.command('create_db', with_appcontext=True)
 def create_db():
     portfolio.db.create_all()
 
-@app.cli.command('reset_db', with_appcontext=True)
-def reset_database():
+@app.cli.command('delete_db', with_appcontext=True)
+def delete_db():
+    portfolio.db.drop_all()
+
+@app.cli.command('reset_admin', with_appcontext=True)
+def reset_admin():
     portfolio.db.drop_all()
     portfolio.db.create_all()
     create_admin()

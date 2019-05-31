@@ -5,8 +5,7 @@ from portfolio.models import db, bcrypt, login_manager
 from portfolio.views import FilesView
 from portfolio.front_page import front_page
 from portfolio.admin import admin_portal
-from portfolio.project_hub import project_hub
-from portfolio.notebook import notebook
+from portfolio.blog  import project_hub, notebook
 
 def create_app(test_config=None):
     # Creating Flask appication object
@@ -60,8 +59,8 @@ def create_app(test_config=None):
     app.register_blueprint(admin_portal)
     app.register_blueprint(project_hub)
     app.register_blueprint(notebook)
-
-    # Register url
+    #
+    # # Register url
     app.add_url_rule('/file/<path:file>', view_func=FilesView.as_view('file'))
 
 

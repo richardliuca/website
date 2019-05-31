@@ -89,20 +89,6 @@
           {% endif %}
         </div>
 
-        <div class="form-group">
-          {{ form.template.label(class="form-control-label form-control-lg") }}
-          {% if form.template.errors %}
-            {{ form.template(class="form-control is-invalid", placeholder="Template") }}
-            <div class="invalid-feedback">
-              {% for error in form.template.errors %}
-                <span>{{ error }}</span>
-              {% endfor %}
-            </div>
-          {% else %}
-            {{ form.template(class="form-control", placeholder="Template") }}
-          {% endif %}
-        </div>
-
         <div class="form-group btn-group">
           {{ form.cancel(class="btn btn-lg btn-danger", type="submit", value="Delete") }}
           {{ form.draft_submit(class="btn btn-lg btn-outline-primary", type="submit", value="Save As Draft") }}

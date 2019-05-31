@@ -17,31 +17,18 @@ class Admin(db.Model, UserMixin):
     name = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(40), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
-    profile_pic = db.Column(db.String(120), nullable=True)
-    projs = db.relationship('Project', backref='lead', lazy=True)
-    notes = db.relationship('Note', backref='author', lazy=True)
+    post = db.relationship('Post', backref='author', lazy=True)
 
     def __repr__(self):
-        return f'Admin({self.name}, {self.profile_pic}, {self.projs}, {self.notes})'
+        return f'Admin({self.name})'
 
-class Project(db.Model):
+class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    post_type = title = db.Column(db.String(10), nullable=False)
     complete = db.Column(db.Boolean, nullable=False)
     title = db.Column(db.String(60), unique=True, nullable=False)
     category = db.Column(db.String(60), unique=False, nullable=True)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     description = db.Column(db.String(240), nullable=False)
     documentation = db.Column(db.Text, nullable=False)
-    template = db.Column(db.String(120), unique=True, nullable=True)
-    admin_id = db.Column(db.Integer, db.ForeignKey('admin.id'), nullable=False)
-
-class Note(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    complete = db.Column(db.Boolean, nullable=False)
-    title = db.Column(db.String(60), unique=True, nullable=False)
-    category = db.Column(db.String(60), unique=False, nullable=True)
-    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    description = db.Column(db.String(240), nullable=False)
-    documentation = db.Column(db.Text, nullable=False)
-    template = db.Column(db.String(120), unique=True, nullable=True)
-    admin_id = db.Column(db.Integer, db.ForeignKey('admin.id'), nullable=False)
+    admin_id = db.Column(db.Integer, db.ForeignKey(Admin.id), nullable=False)
