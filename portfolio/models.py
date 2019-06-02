@@ -19,8 +19,6 @@ class Admin(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
     post = db.relationship('Post', backref='author', lazy=True)
 
-    def __repr__(self):
-        return f'Admin({self.name})'
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
