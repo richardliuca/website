@@ -73,8 +73,6 @@ class NewPost(GeneralMethodView):
         for key, val in category_choices.items():
             self._form.category.choices.append((val, key))
 
-            print(self._form.category.choices)
-
         if self._form.validate_on_submit():
             if self._form.cancel.data:
                 flash('New post cancelled', 'info')
@@ -144,7 +142,15 @@ class EditPost(GeneralMethodView):
             self.add_category_choices(kwargs['post'])
             post_id = request.args.get('id', None)
 
-        if self._form.validate_on_submit():
+        if self._form.select.data:
+            if not(self._form.id_title.data) or \
+                                            self._form.id_title.data == 'None':
+                abort(404)
+            return redirect(url_for('admin_portal.edit',
+                                    post=self._form.post.data,
+                                    id=self._form.id_title.data))
+
+        elif self._form.validate_on_submit():
             if not(post_id):
                 abort(404)
             post = Post.query.get(post_id)
@@ -177,14 +183,6 @@ class EditPost(GeneralMethodView):
             db.session.commit()
             flash('Post modified', 'success')
             return redirect(url_for('admin_portal.dashboard'))
-        elif self._form.select.data:
-            if not(self._form.id_title.data) or \
-                                            self._form.id_title.data == 'None':
-                print('aborting in post')
-                abort(404)
-            return redirect(url_for('admin_portal.edit',
-                                    post=self._form.post.data,
-                                    id=self._form.id_title.data))
         else:
             print(self._form.errors)
 
