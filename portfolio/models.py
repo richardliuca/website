@@ -13,20 +13,31 @@ def load_user(user_id):
     return Admin.query.get(int(user_id))
 
 class Admin(db.Model, UserMixin):
+    __tablename__ = 'admin'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(40), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
-    post = db.relationship('Post', backref='author', lazy=True)
+    posts = db.relationship('Post', backref='author', lazy=True)
 
 
 class Post(db.Model):
+    __tablename__ = 'post'
     id = db.Column(db.Integer, primary_key=True)
-    post_type = title = db.Column(db.String(10), nullable=False)
     complete = db.Column(db.Boolean, nullable=False)
+    tag = db.relationship('Tag', backref='post', lazy=True)
+    date_posted = db.relationship('Date', backref='post', lazy=True)
     title = db.Column(db.String(60), unique=True, nullable=False)
-    category = db.Column(db.String(60), unique=False, nullable=True)
-    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    description = db.Column(db.String(240), nullable=False)
-    documentation = db.Column(db.Text, nullable=False)
-    admin_id = db.Column(db.Integer, db.ForeignKey(Admin.id), nullable=False)
+    body = db.Column(db.Text, nullable=False)
+    admin_id = db.Column(db.Integer, db.ForeignKey('admin.id'), nullable=False)
+
+class Tag(db.Model):
+    __tablename__ = 'tag'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
+
+class Date(db.Model):
+    __tablename__ = 'date'
+    id = db.Column(db.DateTime, nullable=False, nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
