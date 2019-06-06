@@ -20,11 +20,16 @@ class Admin(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
     posts = db.relationship('Post', backref='author', lazy=True)
 
+tag_ref = db.Table('tags',
+    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'), primary_key=True),
+    db.Column('post_id', db.Integer, db.ForeignKey('post.id'), primary_key=True))
+
 class Post(db.Model):
     __tablename__ = 'post'
     id = db.Column(db.Integer, primary_key=True)
     complete = db.Column(db.Boolean, nullable=False)
-    tags = db.relationship('Tag', backref='post', lazy=True)
+    tags = db.relationship('Tag', secondary=tag_ref, lazy=True,
+                            backref=db.backref('post', lazy=True))
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     title = db.Column(db.String(60), unique=True, nullable=False)
     body = db.Column(db.Text, nullable=False)
@@ -33,5 +38,4 @@ class Post(db.Model):
 class Tag(db.Model):
     __tablename__ = 'tag'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20), nullable=False)
-    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
+    name = db.Column(db.String(20), unique=True, nullable=False)

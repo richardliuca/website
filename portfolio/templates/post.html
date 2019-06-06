@@ -16,9 +16,9 @@
               <span>by Richard Liu</span>
             </div>
             <div class="col-md-6 text-right">
-              {% if not(post_category == 'none') %}
-                <span>{{ post_category }}</span>
-              {% endif %}
+              {% for tag in post_tags %}
+                <span>{{ tag.name }}</span>
+              {% endfor %}
             </div>
         </div>
         <hr>

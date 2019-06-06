@@ -38,9 +38,14 @@ def create_dummy_post():
     from portfolio.models import Post, Tag
     from datetime import datetime
     import random
+    tag1 = Tag(name='project')
+    tag2 = Tag(name='note')
+    tag3 = Tag(name='Hello')
+    tag4 = Tag(name='GoodBye')
+    tag5 = Tag(name='Ciao')
     for i in range(20):
-        fir = [random.choice((Tag(name='project', post_id=i+1), Tag(name='note', post_id=i+1)))]
-        sec = [random.choice((Tag(name='Hello', post_id=i+1), Tag(name='GoodBye', post_id=i+1), Tag(name='Ciao', post_id=i+1)))]
+        fir = [random.choice((tag1, tag2))]
+        sec = [random.choice((tag3, tag4, tag5))]
         fir.extend(sec)
         new_post = Post(complete=True,
                         tags=fir,

@@ -3,49 +3,17 @@
   <META NAME="ROBOTS" CONTENT="NOINDEX, FOLLOW">
 {% endblock meta %}
 
-{% block static %}
-  <span id="category_url" style="display: none;">{{ url_for('admin_portal.get_category', _external=True) }}</span>
-{% endblock static %}
-
 {% block dashboard_content %}
+<div class="">
   <form class="" action="" method="POST">
     {{ form.hidden_tag() }}
     <fieldset class="form-group">
-      <div class="form-group">
-        <div class="row">
-          <div class="form-group col-md-2 mb-0">
-            {{ form.post.label(class="form-control-label form-control-lg") }}
-          </div>
-          <div class="form-group col-md-5  mb-0">
-            {{ form.category.label(class="form-control-label form-control-lg") }}
-          </div>
-          <div class="form-group col-md-5  mb-0"></div>
-        </div>
-
-        <div class="row">
-          <div class="form-group col-md-2 mb-0">
-            {{ form.post(class="form-control form-control-sm") }}
-          </div>
-          <div class="form-group col-md-5 mb-0">
-            {{ form.category(class="form-control form-control-sm") }}
-          </div>
-          <div class="form-group col-md-5 mb-0">
-            {% if form.new_category.errors %}
-              {{ form.new_category(class="form-control form-control-sm is-invalid", placeholder="New Category") }}
-              <div class="invalid-feedback">
-                {% for error in form.new_category.errors %}
-                  <span>{{ error }}</span>
-                {% endfor %}
-              </div>
-            {% else %}
-              {{ form.new_category(class="form-control form-control-sm", placeholder="New Category") }}
-            {% endif %}
-          </div>
-        </div>
-      </div>
-
       <div class="form-row">
-        <div class="col-md-4">
+        <div class="form-group col-md-2">
+          {{ form.post.label(class="form-control-label form-control-lg") }}
+          {{ form.post(class="form-control form-control-sm") }}
+        </div>
+        <div class="form-group col-md-10">
           {{ form.title.label(class="form-control-label form-control-lg") }}
           {% if form.title.errors %}
             {{ form.title(class="form-control is-invalid", placeholder="Title") }}
@@ -58,45 +26,52 @@
             {{ form.title(class="form-control", placeholder="Title") }}
           {% endif %}
         </div>
-
-        <div class="col-md-8">
-          {{ form.descript.label(class="form-control-label form-control-lg") }}
-          {% if form.descript.errors %}
-            {{ form.descript(class="form-control is-invalid", placeholder="Brief Summary") }}
-            <div class="invalid-feedback">
-              {% for error in form.descript.errors %}
-                <span>{{ error }}</span>
-              {% endfor %}
-            </div>
-          {% else %}
-            {{ form.descript(class="form-control", placeholder="Brief Summary") }}
-          {% endif %}
-        </div>
       </div>
 
       <div class="form-group">
-        {{ form.doc.label(class="form-control-label form-control-lg") }}
-        {% if form.doc.errors %}
-          {{ form.doc(class="form-control is-invalid", placeholder="Documentation", rows="10") }}
+        <br>
+        {% if form.body.errors %}
+          {{ form.body(class="form-control is-invalid", placeholder="Content", rows="10") }}
           <div class="invalid-feedback">
-            {% for error in form.doc.errors %}
+            {% for error in form.body.errors %}
               <span>{{ error }}</span>
             {% endfor %}
           </div>
         {% else %}
-          {{ form.doc(class="form-control", placeholder="Documentation", rows="10") }}
+          {{ form.body(class="form-control", placeholder="Content", rows="10") }}
         {% endif %}
       </div>
 
+      <div class="form-row">
+        <div class="form-group col-md-1 mb-0">
+          {{ form.tags.label(class="form-control-label form-control-lg") }}
+        </div>
+        <div class="form-group col-md-4 mb-0">
+          {% if form.new_tag.errors %}
+            {{ form.new_tag(class="form-control form-control-sm is-invalid", placeholder="New Tag") }}
+            <div class="invalid-feedback">
+              {% for error in form.new_tag.errors %}
+                <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+          {% else %}
+            {{ form.new_tag(class="form-control form-control-sm", placeholder="New Tag") }}
+          {% endif %}
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-1">
+        </div>
+        <div class="form-group col-md-4">
+          {{ form.tags(class="form-control form-control-sm") }}
+        </div>
+      </div>
       <div class="form-group btn-group">
-        {{ form.cancel(class="btn btn-lg btn-danger", type="submit", value="Cancel") }}
-        {{ form.draft_submit(class="btn btn-lg btn-outline-primary", type="submit", value="Save As Draft") }}
-        {{ form.complete_submit(class="btn btn-lg btn-primary", type="submit", value="Publish") }}
+        {{ form.cancel(class="btn btn-sm btn-outline-danger", type="submit", value="Cancel") }}
+        {{ form.draft_submit(class="btn btn-sm btn-outline-primary", type="submit", value="Save As Draft") }}
+        {{ form.complete_submit(class="btn btn-sm btn-outline-primary", type="submit", value="Publish") }}
       </div>
     </fieldset>
   </form>
+</div>
 {% endblock dashboard_content %}
-
-{% block script %}
-  <script type="text/javascript" src="{{ url_for('admin_portal.static', filename='js/new_post.js')}}"></script>
-{% endblock %}

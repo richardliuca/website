@@ -55,9 +55,9 @@ class PostView(GeneralView):
         post = Post.query.get(id) if id else None
         if not(kwargs):
             abort(404)
-        elif kwargs['post'] == 'projects':
+        elif kwargs['post'] == 'project':
             title = 'Project Hub'
-        elif kwargs['post'] == 'notes':
+        elif kwargs['post'] == 'note':
             title = 'Notebook'
         else:
             abort(404)
@@ -68,5 +68,5 @@ class PostView(GeneralView):
             return super().dispatch_request(title=title,
                                             post_title=post.title,
                                             post_date=post.date_posted.strftime("%B, %w %Y"),
-                                            post_content=post.documentation,
-                                            post_category=post.category)
+                                            post_content=post.body,
+                                            post_tags=post.tags)

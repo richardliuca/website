@@ -3,13 +3,7 @@
   <META NAME="ROBOTS" CONTENT="NOINDEX, FOLLOW">
 {% endblock meta %}
 
-{% block static %}
-  <span id=title_url style="display: none;">{{ url_for('admin_portal.get_title', _external=True) }}</span>
-  <span id="category_url" style="display: none;">{{ url_for('admin_portal.get_category', _external=True) }}</span>
-{% endblock static %}
-
 {% block dashboard_content %}
-
   <form class="" action="" method="POST">
     {{ form.hidden_tag() }}
     <fieldset class="form-group">
@@ -99,7 +93,3 @@
   </form>
 
 {% endblock dashboard_content %}
-
-{% block script %}
-  <script type="text/javascript" src="{{ url_for('admin_portal.static', filename='js/edit_post.js')}}"></script>
-{% endblock %}

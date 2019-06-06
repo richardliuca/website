@@ -1,9 +1,9 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField,\
-                    TextAreaField, SelectField, DateTimeField
+                    TextAreaField, SelectField, SelectMultipleField,DateTimeField
 from wtforms.validators import InputRequired, DataRequired, Length, Email,\
                                 EqualTo, Optional, ValidationError
-from portfolio.models import Post
+from portfolio.models import Post, Tag
 
 class LoginForm(FlaskForm):
     email = StringField(u'Email Address', validators=[InputRequired(),
@@ -14,34 +14,25 @@ class LoginForm(FlaskForm):
     remember = BooleanField(u'Remember Me')
     submit = SubmitField(u'Login')
 
-def unique_post(form, field):
-    if form.post.data:
-        field_name = field.name if not(field.name == 'new_category') else 'category'
-        field_value = field.data.lower()
-
-        get_field = Post.query.filter_by(post_type=form.post.data,
-                                            **{field_name: field_value}).first()
-
-        if get_field:
-            raise ValidationError(f'{field.data} is already taken or in used')
-    else:
-        raise ValidationError('No post type specified')
-
-
 class NewPostForm(FlaskForm):
-    post = SelectField(u'Post', choices=[('project', 'Project'),
-                                        ('note', 'Note')])
-    category = SelectField(u'Category', choices=[], validators=[Optional()])
-    new_category = StringField(u'New Category', validators=[Optional(), unique_post])
-    title = StringField(u'Title', validators=[InputRequired(),
-                                            DataRequired(),
-                                            unique_post])
-    descript = StringField(u'Brief Summary', validators=[InputRequired(),
-                                                        DataRequired()])
-    doc = TextAreaField(u'Documentation', validators=[InputRequired(), DataRequired()])
+    post = SelectField(u'Post', choices=[])
+    tags = SelectMultipleField(u'Tag', choices=[], validators=[Optional()])
+    new_tag = StringField(u'New Tag', validators=[Optional()])
+    title = StringField(u'Title', validators=[InputRequired(), DataRequired()])
+    body = TextAreaField(u'Content', validators=[InputRequired(), DataRequired()])
     draft_submit = SubmitField(u'Save as Draft', validators=[Optional()])
     complete_submit = SubmitField(u'Publish', validators=[Optional()])
     cancel = SubmitField(u'Cancel', validators=[Optional()])
+
+    def validate_title(form, field):
+        get_title = Post.query.filter_by(**{field.name: field.data}).first()
+        if get_title:
+            raise ValidationError(f'{field.data} is already taken or in used')
+
+    def validate_new_tag(form, field):
+        get_tag = Tag.query.filter_by(name=field.data).first()
+        if get_tag:
+            raise ValidationError(f'{field.data} is already taken or in used')
 
 class SelectPost(NewPostForm):
     id_title = SelectField(u'Title', choices=[], validators=[Optional()])
