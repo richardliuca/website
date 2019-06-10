@@ -3,6 +3,7 @@ from flask import render_template, request, abort, \
 from jinja2 import TemplateNotFound
 from flask.views import View, MethodView
 from portfolio.models import Post
+from portfolio.catalog import Catalog
 import os.path as path
 
 class GeneralView(View):
@@ -48,6 +49,27 @@ class FilesView(View):
         except:
             abort(404)
 
+class PostSearch(GeneralView):
+
+    def dispatch_request(self):
+        page = request.args.get('page', 1, type=int)
+        tags = [name for name in request.args.getlist('tag') if not(name in self.target)]
+        or_search = request.args.get('or', 0, type=int)
+        kwargs = {'tag': self.target, 'page': page, 'or': False,
+                'complete': True, 'max_page': 8}
+        if tags:
+            kwargs['tag'].extend(tags)
+            kwargs['or'] = or_search
+        try:
+            post_catalog = Catalog(**kwargs)
+        except:
+            abort(404)
+        return super().dispatch_request(title=self.title,
+                                        catalog=post_catalog.posts,
+                                        source=self.target,
+                                        tags=tags,
+                                        or_search=or_search)
+
 class PostView(GeneralView):
 
     def dispatch_request(self, **kwargs):
@@ -67,6 +89,6 @@ class PostView(GeneralView):
         else:
             return super().dispatch_request(title=title,
                                             post_title=post.title,
-                                            post_date=post.date_posted.strftime("%B, %w %Y"),
+                                            post_date=post.date_posted.strftime("%B, %d %Y"),
                                             post_content=post.body,
                                             post_tags=post.tags)

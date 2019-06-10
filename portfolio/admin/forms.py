@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField,\
-                    TextAreaField, SelectField, SelectMultipleField,DateTimeField
+                    TextAreaField, SelectField, SelectMultipleField
 from wtforms.validators import InputRequired, DataRequired, Length, Email,\
                                 EqualTo, Optional, ValidationError
 from portfolio.models import Post, Tag
@@ -18,6 +18,7 @@ class NewPostForm(FlaskForm):
     post = SelectField(u'Post', choices=[])
     tags = SelectMultipleField(u'Tag', choices=[], validators=[Optional()])
     new_tag = StringField(u'New Tag', validators=[Optional()])
+    post_datetime = StringField(u'Date Time', validators=[Optional()])
     title = StringField(u'Title', validators=[InputRequired(), DataRequired()])
     body = TextAreaField(u'Content', validators=[InputRequired(), DataRequired()])
     draft_submit = SubmitField(u'Save as Draft', validators=[Optional()])

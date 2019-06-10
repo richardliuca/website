@@ -4,8 +4,8 @@ from flask_login import login_user, logout_user, current_user, login_required,\
 from portfolio.admin import forms
 from portfolio import db, bcrypt
 from portfolio.models import db, Admin, Post, Tag
-from portfolio.views  import GeneralView, GeneralMethodView
-from portfolio.catalog import Catalog
+from portfolio.views  import GeneralView, GeneralMethodView, PostSearch
+from datetime import datetime
 
 class Login(GeneralMethodView):
 
@@ -92,10 +92,11 @@ class NewPost(GeneralMethodView):
 
             kwargs = {'complete': complete, 'title': self._form.title.data,
                     'tags': tags, 'body': self._form.body.data,
-                    'author': current_user}
+                    'author': current_user,
+                    'date_posted': datetime.strptime(
+                    self._form.post_datetime.data, '%B/%d/%Y %H:%M:%S.%f')}
             new_post = Post(**kwargs)
             flash('Post Saved', 'success')
-            print(kwargs)
             db.session.add(new_post)
             db.session.commit()
             return redirect(url_for('admin_portal.dashboard'))
@@ -114,3 +115,7 @@ def get_tags(filter_con=[], get_list=[]):
     tags = tags.all()
     list(map(lambda x: choices.update({str(x.id) : x.name.capitalize()}), tags))
     return choices
+
+class Posts(PostSearch):
+    def dispatch_request(self, *args, **kwargs):
+        return super().dispatch_request(title='Posts', *args, **kwargs)

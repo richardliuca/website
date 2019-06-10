@@ -16,7 +16,7 @@ def reset_admin():
     create_admin()
 
 def create_admin():
-    from portfolio.models import Admin
+    from portfolio.models import Admin, Tag
     from portfolio import bcrypt
 
     file_path = os.path.join(app.instance_path, 'admin.json')
@@ -26,8 +26,13 @@ def create_admin():
             master = Admin(name=data['name'],
                         email=data['email'],
                         password=bcrypt.generate_password_hash(data['password']))
-            portfolio.db.session.add(master)
+
+            project_tag = Tag(name='project')
+            note_tag = Tag(name='note')
+            # portfolio.db.session.add(master)
+            portfolio.db.session.add_all([master, project_tag, note_tag])
             portfolio.db.session.commit()
+
     except FileNotFoundError:
         print('File not found')
         print('Expected admin.json file inside instance folder')
@@ -38,8 +43,8 @@ def create_dummy_post():
     from portfolio.models import Post, Tag
     from datetime import datetime
     import random
-    tag1 = Tag(name='project')
-    tag2 = Tag(name='note')
+    tag1 = Tag.query.get(1)
+    tag2 = Tag.query.get(2)
     tag3 = Tag(name='Hello')
     tag4 = Tag(name='GoodBye')
     tag5 = Tag(name='Ciao')

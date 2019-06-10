@@ -1,13 +1,3 @@
-body {
-  font-size: .875rem;
-}
-
-#sidebar .feather {
-  width: 16px;
-  height: 16px;
-  vertical-align: text-bottom;
-}
-
 /*
  * Navbar
  */
@@ -24,31 +14,18 @@ body {
 
 .sidebar {
   position: fixed;
-  width: 250px;
-  height: 100%;
+  width: 0;
   top: 0;
   bottom: 0;
   left: 0;
   z-index: 98; /* Behind the navbar */
-  /* padding: 48px 0 0; /* Height of navbar */ */
   box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
   background-color: #354052;
-}
-
-.sidebar-sticky {
-  position: fixed;
-  top: 0;
-  height: calc(100vh - 48px);
   padding-top: 60px;
   overflow-x: hidden;
   overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+  transition: 0.4s;
 }
-
-/* @supports ((position: -webkit-sticky) or (position: sticky)) {
-  .sidebar-sticky {
-    position: fixed;
-  }
-} */
 
 .sidebar .nav-link {
   font-weight: 500;
@@ -58,6 +35,9 @@ body {
 .sidebar .nav-link .feather {
   margin-right: 4px;
   color: #ffffff;
+  width: 16px;
+  height: 16px;
+  vertical-align: text-bottom;
 }
 
 .sidebar .nav-link.active,
@@ -73,4 +53,24 @@ body {
 .sidebar-heading {
   font-size: .75rem;
   text-transform: uppercase;
+}
+
+
+#sidebar-toggle .feather {
+  width: 50px;
+  height: 50px;
+}
+
+main {
+  transition: 0.5s;
+}
+
+@media (min-width: 992px) {
+  .sidebar {
+    width: 12.5rem;
+  }
+
+  main {
+    margin-left: 12.5rem;
+  }
 }

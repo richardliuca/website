@@ -1,5 +1,5 @@
 from flask import Blueprint
-from portfolio.admin.views import Login, Logout, Dashboard, NewPost
+from portfolio.admin.views import Login, Logout, Dashboard, NewPost, Posts
 
 admin_portal = Blueprint('admin_portal', __name__,
                         template_folder='templates',
@@ -16,3 +16,6 @@ admin_portal.add_url_rule('/dashboard/',
 admin_portal.add_url_rule('/dashboard/new_post/',
                 view_func=NewPost.as_view('new_post',
                                             template_name='new_post.html'))
+admin_portal.add_url_rule('/dashboard/posts',
+                view_func=Posts.as_view('posts',
+                                            template_name='posts.html'))

@@ -4,74 +4,101 @@
 {% endblock meta %}
 
 {% block dashboard_content %}
-<div class="">
-  <form class="" action="" method="POST">
-    {{ form.hidden_tag() }}
-    <fieldset class="form-group">
-      <div class="form-row">
-        <div class="form-group col-md-2">
-          {{ form.post.label(class="form-control-label form-control-lg") }}
-          {{ form.post(class="form-control form-control-sm") }}
-        </div>
-        <div class="form-group col-md-10">
-          {{ form.title.label(class="form-control-label form-control-lg") }}
-          {% if form.title.errors %}
-            {{ form.title(class="form-control is-invalid", placeholder="Title") }}
-            <div class="invalid-feedback">
-              {% for error in form.title.errors %}
-                <span>{{ error }}</span>
-              {% endfor %}
-            </div>
-          {% else %}
-            {{ form.title(class="form-control", placeholder="Title") }}
-          {% endif %}
-        </div>
+<form class="" action="" method="POST">
+  {{ form.hidden_tag() }}
+  <fieldset class="form-group">
+    <div class="form-row">
+      <div class="form-group col-md-2">
+        {{ form.post.label(class="form-control-label form-control-lg") }}
+        {{ form.post(class="form-control") }}
       </div>
-
-      <div class="form-group">
-        <br>
-        {% if form.body.errors %}
-          {{ form.body(class="form-control is-invalid", placeholder="Content", rows="10") }}
+      <div class="form-group col-md-10">
+        {{ form.title.label(class="form-control-label form-control-lg") }}
+        {% if form.title.errors %}
+          {{ form.title(class="form-control is-invalid", placeholder="Title") }}
           <div class="invalid-feedback">
-            {% for error in form.body.errors %}
+            {% for error in form.title.errors %}
               <span>{{ error }}</span>
             {% endfor %}
           </div>
         {% else %}
-          {{ form.body(class="form-control", placeholder="Content", rows="10") }}
+          {{ form.title(class="form-control", placeholder="Title") }}
         {% endif %}
       </div>
+    </div>
 
-      <div class="form-row">
-        <div class="form-group col-md-1 mb-0">
-          {{ form.tags.label(class="form-control-label form-control-lg") }}
+    <div class="form-group">
+      <br>
+      {% if form.body.errors %}
+        {{ form.body(class="form-control is-invalid", placeholder="Content", rows="16") }}
+        <div class="invalid-feedback">
+          {% for error in form.body.errors %}
+            <span>{{ error }}</span>
+          {% endfor %}
         </div>
-        <div class="form-group col-md-4 mb-0">
-          {% if form.new_tag.errors %}
-            {{ form.new_tag(class="form-control form-control-sm is-invalid", placeholder="New Tag") }}
+      {% else %}
+        {{ form.body(class="form-control", placeholder="Content", rows="16") }}
+      {% endif %}
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-1 mb-0">
+        {{ form.tags.label(class="form-control-label form-control-lg") }}
+      </div>
+      <div class="form-group col-md-4 mb-0">
+        {% if form.new_tag.errors %}
+          {{ form.new_tag(class="form-control form-control-sm is-invalid", placeholder="New Tag") }}
+          <div class="invalid-feedback">
+            {% for error in form.new_tag.errors %}
+              <span>{{ error }}</span>
+            {% endfor %}
+          </div>
+        {% else %}
+          {{ form.new_tag(class="form-control form-control-sm", placeholder="New Tag") }}
+        {% endif %}
+      </div>
+      <div class="form-group col-md-4 mb-0">
+        {{ form.post_datetime.label(class="form-control-label form-control-lg") }}
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-1">
+      </div>
+      <div class="form-group col-md-4">
+        {{ form.tags(class="form-control form-control-sm") }}
+      </div>
+      <div class="form-group col-md-4">
+        <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+          {% if form.post_datetime.errors %}
+            {{ form.post_datetime(class="form-control is-invalid datetimepicker-input", **{'data-target': "#datetimepicker1"}) }}
+            <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+              <span class="input-group-text"><i data-feather="calendar"></i></span>
+            </div>
             <div class="invalid-feedback">
-              {% for error in form.new_tag.errors %}
+              {% for error in form.post_datetime.errors %}
                 <span>{{ error }}</span>
               {% endfor %}
             </div>
           {% else %}
-            {{ form.new_tag(class="form-control form-control-sm", placeholder="New Tag") }}
+            {{ form.post_datetime(class="form-control datetimepicker-input", **{'data-target': "#datetimepicker1"}) }}
+            <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+              <span class="input-group-text"><i data-feather="calendar"></i></span>
+            </div>
           {% endif %}
         </div>
       </div>
-      <div class="form-row">
-        <div class="form-group col-md-1">
-        </div>
-        <div class="form-group col-md-4">
-          {{ form.tags(class="form-control form-control-sm") }}
-        </div>
-      </div>
-      <div class="form-group btn-group">
-        {{ form.cancel(class="btn btn-sm btn-outline-danger", type="submit", value="Cancel") }}
-        {{ form.draft_submit(class="btn btn-sm btn-outline-primary", type="submit", value="Save As Draft") }}
-        {{ form.complete_submit(class="btn btn-sm btn-outline-primary", type="submit", value="Publish") }}
-      </div>
-    </fieldset>
-  </form>
-</div>
+    </div>
+
+    <div class="form-group btn-group">
+      {{ form.cancel(class="btn btn-outline-danger", type="submit", value="Cancel") }}
+      {{ form.draft_submit(class="btn btn-outline-primary", type="submit", value="Save As Draft") }}
+      {{ form.complete_submit(class="btn btn-outline-primary", type="submit", value="Publish") }}
+    </div>
+  </fieldset>
+</form>
 {% endblock dashboard_content %}
+
+{% block dashboard_script %}
+  <script type="text/javascript" src="{{ url_for('admin_portal.static', filename='js/new_post.js') }}"></script>
+{% endblock dashboard_script %}
