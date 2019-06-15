@@ -117,5 +117,9 @@ def get_tags(filter_con=[], get_list=[]):
     return choices
 
 class Posts(PostSearch):
-    def dispatch_request(self, *args, **kwargs):
-        return super().dispatch_request(title='Posts', *args, **kwargs)
+    decorators = [login_required, fresh_login_required]
+
+    title = 'Post'
+    target = ['project', 'note']
+    max_page = 20
+    complete = True

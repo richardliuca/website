@@ -4,7 +4,11 @@ from portfolio.views import PostSearch
 class Hub(PostSearch):
     title = 'Project Hub'
     target = ['project',]
+    max_page = 8
+    complete = True
 
 class Notebook(PostSearch):
     title = 'NoteBook'
     target = ['note',]
+    max_page = 8
+    complete = True

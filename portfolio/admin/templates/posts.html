@@ -4,4 +4,12 @@
 {% endblock meta %}
 
 {% block dashboard_content %}
+  {% for post in catalog.items %}
+    <div class="media">
+      <div class="media-body">
+        <h5>{{ post.title }}</h5>
+        <p>{{ post.body }}</p>
+      </div>
+    </div>
+  {% endfor %}
 {% endblock dashboard_content %}

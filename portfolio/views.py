@@ -2,8 +2,7 @@ from flask import render_template, request, abort, \
                 send_from_directory, current_app
 from jinja2 import TemplateNotFound
 from flask.views import View, MethodView
-from portfolio.models import Post
-from portfolio.catalog import Catalog
+from portfolio.models import db, Post, Tag
 import os.path as path
 
 class GeneralView(View):
@@ -55,17 +54,19 @@ class PostSearch(GeneralView):
         page = request.args.get('page', 1, type=int)
         tags = [name for name in request.args.getlist('tag') if not(name in self.target)]
         or_search = request.args.get('or', 0, type=int)
-        kwargs = {'tag': self.target, 'page': page, 'or': False,
-                'complete': True, 'max_page': 8}
-        if tags:
-            kwargs['tag'].extend(tags)
-            kwargs['or'] = or_search
-        try:
-            post_catalog = Catalog(**kwargs)
-        except:
-            abort(404)
+        self.posts = Post.query.filter(Post.complete == self.complete)
+        self.posts = self.posts.filter(db.or_(*[Post.tags.any(Tag.name == tag) for tag in self.target]))
+        if or_search:
+            self.posts = self.posts.filter(db.or_(*[Post.tags.any(Tag.name == tag) for tag in tags]))
+        else:
+            for tag in tags:
+                self.posts = self.posts.filter(Post.tags.any(Tag.name == tag))
+
+        self.posts = self.posts.order_by(Post.id.desc()).paginate(page=page, per_page=self.max_page)
+
+        print(self.posts.items)
         return super().dispatch_request(title=self.title,
-                                        catalog=post_catalog.posts,
+                                        catalog=self.posts,
                                         source=self.target,
                                         tags=tags,
                                         or_search=or_search)

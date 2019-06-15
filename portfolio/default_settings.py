@@ -17,9 +17,6 @@ class DevelopmentConfig(Config):
     DEBUG = True
     ENV = 'development'
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://richard:liu@localhost/flask_dev'
-    # SQLALCHEMY_BINDS = {
-    #     'security': 'sqlite:///' + path.join(current_app.instance_path, 'security.db'),
-    # }
 
 class TestingConfig(Config):
     TESTING = True
