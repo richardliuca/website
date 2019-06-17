@@ -30,7 +30,7 @@ class Post(db.Model):
     complete = db.Column(db.Boolean, nullable=False)
     tags = db.relationship('Tag', secondary=tag_ref, lazy=True,
                             backref=db.backref('post', lazy=True))
-    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date_posted = db.Column(db.DateTime, nullable=False)
     title = db.Column(db.String(60), unique=True, nullable=False)
     body = db.Column(db.Text, nullable=False)
     admin_id = db.Column(db.Integer, db.ForeignKey('admin.id'), nullable=False)
