@@ -18,7 +18,7 @@ class NewPostForm(FlaskForm):
     post = SelectField(u'Post', choices=[])
     tags = SelectMultipleField(u'Tag', choices=[], validators=[Optional()])
     new_tag = StringField(u'New Tag', validators=[Optional()])
-    post_datetime = StringField(u'Date Time', validators=[Optional()])
+    post_datetime = StringField(u'Date Time', validators=[InputRequired(), DataRequired()])
     title = StringField(u'Title', validators=[InputRequired(), DataRequired()])
     body = TextAreaField(u'Content', validators=[InputRequired(), DataRequired()])
     draft_submit = SubmitField(u'Save as Draft', validators=[Optional()])
