@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 from flask import Flask
 from portfolio.models import db, bcrypt, login_manager
-from portfolio.views import FilesView
+from portfolio.views import FilesView, DeletePost, PostView
 from portfolio.front_page import front_page
 from portfolio.admin import admin_portal
 from portfolio.blog  import project_hub, notebook
@@ -61,7 +61,9 @@ def create_app(test_config=None):
     app.register_blueprint(notebook)
     #
     # # Register url
-    app.add_url_rule('/file/<path:file>', view_func=FilesView.as_view('file'))
+    app.add_url_rule('/file/<path:file>', view_func=FilesView, endpoint='file')
+    app.add_url_rule('/<post>/', view_func=PostView.as_view('preview'))
+    app.add_url_rule('/delete', view_func=DeletePost, endpoint='delete')
 
 
     return app
