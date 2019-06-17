@@ -26,9 +26,10 @@ $('#previewPostModal').on('show.bs.modal', function (event) {
     url: $("#ajaxPreview").html(),
     data: { id: postId },
     success: function(data, textStatus, jqXHR) {
-      console.log(data);
       modal.find('.modal-title').html(data.title);
+      modal.find('#modal-date').html(data.date_posted);
       modal.find('#modal-body').html(data.content);
+      modal.find('#modal-tags').html(data.tags.map(tag => tag.charAt(0).toUpperCase() + tag.substring(1)).join(', '));
     },
   });
 });
