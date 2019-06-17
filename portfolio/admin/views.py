@@ -88,7 +88,7 @@ class NewPost(GeneralMethodView):
             if self._form.tags.data:
                 [tags.append(Tag.query.get(int(id))) for id in self._form.tags.data]
             if self._form.new_tag.data:
-                tags.append(Tag(name=self._form.new_tag.data))
+                tags.append(Tag(name=self._form.new_tag.data.lower()))
 
             kwargs = {'complete': complete, 'title': self._form.title.data,
                     'tags': tags, 'body': self._form.body.data,
@@ -122,4 +122,4 @@ class Posts(PostSearch):
     title = 'Post'
     target = ['project', 'note']
     max_page = 20
-    complete = True
+    complete = 'All'
