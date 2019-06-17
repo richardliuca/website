@@ -1,0 +1,119 @@
+{% extends "dashboard.html" %}
+{% block meta %}
+  <META NAME="ROBOTS" CONTENT="NOINDEX, FOLLOW">
+{% endblock meta %}
+
+{% block dashboard_content %}
+  <div class="bg-light shadow">
+    <table class="table table-hover table-sm">
+      <thead class="thead-dark">
+        <th scope="col">Status</th>
+        <th scope="col">Title</th>
+        <th scope="col">Date Posted</th>
+        <th scope="col">Tags</th>
+        <th scope="col">Actions</th>
+      </thead>
+      <tbody>
+        {% for post in catalog.items %}
+          <tr id="row-{{ post.id }}">
+            {% if post.complete %}
+              <td><span class="badge badge-light">Published</span></td>
+            {% else %}
+              <td><span class="badge badge-primary">Draft</span></td>
+            {% endif %}
+            <td>{{ post.title }}</td>
+            <td>{{ post.date_posted.strftime("%B, %d %Y %I:%M %p") }}</td>
+            <td><span>
+              {% for tag in post.tags %}
+                {% if loop.last %}
+                  {{ tag.name.capitalize() }}
+                {% else %}
+                  {{ tag.name.capitalize() }},
+                {% endif %}
+              {% endfor %}
+            </span></td>
+            <td class="d-flex flex-row">
+              <div class="btn-group">
+                <a class="btn btn-outline-success btn-sm" href="javascript:void(0)">Edit</a>
+                <a class="btn btn-outline-primary btn-sm" href="javascript:void(0)" data-toggle="modal" data-target="#previewPostModal" data-postid="{{ post.id }}">View</a>
+                <a class="btn btn-outline-danger btn-sm" href="javascript:void(0)" data-toggle="modal" data-target="#deletePostModal" data-postid="{{ post.id }}" data-title="{{ post.title }}">Delete</a>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <ul class="pagination pagination-lg">
+        {% if catalog.has_prev %}
+          <li class="page-item active shadow">
+            <a class="page-link" href="{{ url_for('admin_portal.posts', page=catalog.prev_num, tag=tags, or=or_search)}}">{{catalog.prev_num}}/{{catalog.pages}} Previous</a>
+          </li>
+        {% else %}
+        {% endif %}
+      </ul>
+    </div>
+    <div class="col-md-6 d-flex justify-content-center">
+    </div>
+    <div class="col">
+      <ul class="pagination pagination-lg justify-content-end">
+        {% if catalog.has_next %}
+          <li class="page-item active shadow">
+            <a class="page-link" href="{{ url_for('admin_portal.posts', page=catalog.next_num, tag=tags, or=or_search)}}">{{catalog.next_num}}/{{catalog.pages}} Next</a>
+          </li>
+        {% else %}
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+
+
+<div class="modal fade" id="deletePostModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Are you sure you want to delete ?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>This action is permanent !</p>
+        <p id="ajaxDelete" hidden>{{ url_for('delete', _external=True) }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" id="delete-confirm"class="btn btn-danger" data-dismiss="modal">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="previewPostModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Post Title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p id="modal-body">Post Content</p>
+        <p id="ajaxPreview" hidden>{{ url_for('preview', post='preview', _external=True) }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock dashboard_content %}
+
+{% block dashboard_script %}
+  <script type="text/javascript" src="{{ url_for('admin_portal.static', filename='js/posts_logs.js') }}"></script>
+{% endblock dashboard_script%}
