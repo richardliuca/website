@@ -17,13 +17,17 @@
             </div>
             <div class="col-md-6 text-right">
               {% for tag in post_tags %}
-                <span>{{ tag.name }}</span>
+                {% if loop.last %}
+                  <span>{{ tag.name.capitalize() }}</span>
+                {% else %}
+                  <span>{{ tag.name.capitalize() }},</span>
+                {% endif %}
               {% endfor %}
             </div>
         </div>
         <hr>
         <p>
-          {{ post_content }}
+          {{ post_content|safe }}
         </p>
       </div>
 
