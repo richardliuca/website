@@ -16,6 +16,6 @@ admin_portal.add_url_rule('/dashboard/',
 admin_portal.add_url_rule('/dashboard/new_post/',
                 view_func=NewPost.as_view('new_post',
                                             template_name='editor.html'))
-admin_portal.add_url_rule('/dashboard/posts',
+admin_portal.add_url_rule('/dashboard/posts/',
                 view_func=Posts.as_view('posts',
                                             template_name='posts_log.html'))
