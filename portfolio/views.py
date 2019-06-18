@@ -52,7 +52,7 @@ class PostSearch(GeneralView):
 
     def dispatch_request(self):
         page = request.args.get('page', 1, type=int)
-        tags = [name for name in request.args.getlist('tag') if not(name in self.target)]
+        tags = [name.lower() for name in request.args.getlist('tag') if not(name.lower() in self.target)]
         or_search = request.args.get('or', 0, type=int)
 
         if self.complete == True or self.complete == False:
@@ -69,7 +69,12 @@ class PostSearch(GeneralView):
                 self.posts = self.posts.filter(Post.tags.any(Tag.name == tag))
             or_search = None
 
-        self.posts = self.posts.order_by(Post.id.desc()).paginate(page=page, per_page=self.max_page)
+        self.posts = self.posts.order_by(Post.id.desc())
+
+        if self.max_page:
+            self.posts = self.posts.paginate(page=page, per_page=self.max_page)
+        else:
+            self.posts = self.posts.all()
 
         return super().dispatch_request(title=self.title,
                                         catalog=self.posts,

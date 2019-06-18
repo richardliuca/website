@@ -121,5 +121,5 @@ class Posts(PostSearch):
 
     title = 'Post'
     target = ['project', 'note']
-    max_page = 20
     complete = 'All'
+    max_page = False
