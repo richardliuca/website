@@ -1,4 +1,49 @@
-$('#deletePostModal').on('show.bs.modal', function (event) {
+// Add search bar to html
+$("#dashboard-header").append(
+  '<div class="form-inline"><input type="search" placeholder="Search" class="form-control form-control-lg" id="search-bar"></div>'
+);
+var searchBar = $("#search-bar");
+
+// Get all post table entries
+var tableEntries = $(".row-post");
+var tableSortedEntries = tableEntries.slice();
+const tableLimit = 10;
+
+// Show current page within the table limit
+postsPagination(page=0);
+$("table").fadeIn(300); // Fade in the entire table
+
+
+function postsPagination(page=0, tableLimit=10) {
+  const totalLength = tableSortedEntries.length;
+  const numOfPages = Math.ceil(totalLength/tableLimit);
+  const currentPage = tableSortedEntries.slice(page*tableLimit+0, page*tableLimit+tableLimit);
+  tableEntries.hide();
+  currentPage.show();
+};
+
+// Handling search bar typing
+searchBar.keyup(function() {
+  const search = $(this).val();
+  if (search) {
+    tableSortedEntries = tableEntries.filter(function(index, elem) {
+      $(elem).children()
+      for (let item of $(elem).children()) {
+        if ($(item).text().toLowerCase().includes(search)) {
+          return true
+        }
+      };
+      return false
+    });
+
+  } else {
+    tableSortedEntries = tableEntries.slice();
+  };
+  postsPagination(page=0);
+});
+
+// Post delete and ajax call for boostrap modal
+$("#deletePostModal").on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget);
   var title = button.data('title');
   var postId = button.data('postid');
@@ -8,17 +53,17 @@ $('#deletePostModal').on('show.bs.modal', function (event) {
     var deleteRequest = $.ajax({
       url: $("#ajaxDelete").html(),
       data: { id: postId },
-      success: deleteSuccess,
+      success: function(data, textStatus, jqXHR) {
+        $(`#row-${data.id}`).fadeOut('slow', function() {
+          $(this).remove();
+        });
+      },
     });
   });
 });
 
-function deleteSuccess(data, textStatus, jqXHR) {
-  console.log(data.message);
-  $(`#row-${data.id}`).fadeOut();
-}
-
-$('#previewPostModal').on('show.bs.modal', function (event) {
+// Post view and ajax call for boostrap modal
+$("#previewPostModal").on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget);
   var postId = button.data('postid');
   var modal = $(this);
