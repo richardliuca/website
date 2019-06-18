@@ -15,12 +15,12 @@
     {% include 'sidebar.html' %}
 
     <main role="main" class="px-4">
-      <div class="d-flex align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <div class="d-flex align-items-center pt-3 pb-2 mb-3 border-bottom" id="dashboard-header">
         <a class="btn" href="javascript:void(0)" id="sidebar-toggle" onclick="sidebarToggle()"><i data-feather="menu"></i></a>
         {% if title %}
-          <h1>{{ title }}</h1>
+          <h1 class="flex-grow-1">{{ title }}</h1>
         {% else %}
-          <h1>Richard Liu</h1>
+          <h1 class="flex-grow-1">Richard Liu</h1>
         {% endif %}
       </div>
 
