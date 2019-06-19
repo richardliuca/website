@@ -8,30 +8,79 @@ var searchBar = $("#search-bar");
 var tableEntries = $(".row-post");
 var tableSortedEntries = tableEntries.slice();
 const tableLimit = 10;
+var currentPageNum = 0;
+
+const prevPage = $("#pagination-left");
+const pageNumbers = $("#pagination-center");
+const nextPage = $("#pagination-right");
 
 // Show current page within the table limit
 postsPagination(page=0);
 $("table").fadeIn(300); // Fade in the entire table
 
 
-function postsPagination(page=0, tableLimit=10) {
+function postsPagination (page=0, tableLimit=10) {
   const totalLength = tableSortedEntries.length;
   const numOfPages = Math.ceil(totalLength/tableLimit);
   const currentPage = tableSortedEntries.slice(page*tableLimit+0, page*tableLimit+tableLimit);
   tableEntries.hide();
   currentPage.show();
+
+  prevPage.empty();
+  pageNumbers.empty();
+  nextPage.empty();
+  if (numOfPages > 1) {
+    if (page == 0) {
+      prevPage.empty();
+      nextPage.append(`
+        <li class="page-item active shadow">
+          <a class="page-link" href="javascript:postsPagination(${page+1})">Next</a>
+        </li>
+        `);
+    } else if (page == (numOfPages-1)) {
+      nextPage.empty();
+      prevPage.append(`
+        <li class="page-item active shadow">
+          <a class="page-link" href="javascript:postsPagination(${page-1})">Previous</a>
+        </li>
+        `);
+    } else {
+      prevPage.append(`
+        <li class="page-item active shadow">
+          <a class="page-link" href="javascript:postsPagination(${page-1})">Previous</a>
+        </li>
+        `);
+      nextPage.append(`
+        <li class="page-item active shadow">
+          <a class="page-link" href="javascript:postsPagination(${page+1})">Next</a>
+        </li>
+        `);
+    };
+    paginationNumbers(page, numOfPages);
+  };
 };
+
+function paginationNumbers (thisPage, total) {
+  for (i=0; i < total; i++) {
+    var status = (i == thisPage)? "active" : "";
+    pageNumbers.append(`
+      <li class="page-item ${status} shadow">
+      <a class="page-link" href="javascript:postsPagination(${i})">${i+1}</a>
+      </li>
+    `);
+  };
+}
 
 // Handling search bar typing
 searchBar.keyup(function() {
-  const search = $(this).val();
+  const search = $(this).val().toLowerCase();
   if (search) {
     tableSortedEntries = tableEntries.filter(function(index, elem) {
       $(elem).children()
       for (let item of $(elem).children()) {
         if ($(item).text().toLowerCase().includes(search)) {
           return true
-        }
+        };
       };
       return false
     });

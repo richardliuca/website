@@ -48,22 +48,14 @@
   <div class="row">
     <div class="col">
       <ul class="pagination pagination-lg" id="pagination-left">
-        {% if catalog.has_prev %}
-          <li class="page-item active shadow">
-            <a class="page-link" href="{{ url_for('admin_portal.posts', page=catalog.prev_num, tag=tags, or=or_search)}}">{{catalog.prev_num}}/{{catalog.pages}} Previous</a>
-          </li>
-        {% endif %}
       </ul>
     </div>
-    <div class="col-md-6 d-flex justify-content-center" id="pagination-center">
+    <div class="col">
+      <ul class="pagination pagination-lg justify-content-center" id="pagination-center">
+      </ul>
     </div>
     <div class="col">
       <ul class="pagination pagination-lg justify-content-end" id="pagination-right">
-        {% if catalog.has_next %}
-          <li class="page-item active shadow">
-            <a class="page-link" href="{{ url_for('admin_portal.posts', page=catalog.next_num, tag=tags, or=or_search)}}">{{catalog.next_num}}/{{catalog.pages}} Next</a>
-          </li>
-        {% endif %}
       </ul>
     </div>
   </div>
