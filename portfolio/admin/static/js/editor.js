@@ -22,6 +22,19 @@ $(document).ready(function() {
         placeholder: 'Body',
         tabsize: 2,
         height: 370,
-        focus: false
+        focus: false,
+        callbacks: {
+          onImageUpload: function(files) {
+            var imgNode = $('<img>', {
+              src: 'https://dummyimage.com/600x400/000000/ffffff&text=Place+Holder'
+            });
+            var reader = new FileReader();
+            reader.readAsDataURL(files[0]);
+            reader.onload = function() {
+              console.log(reader.result);
+            };
+            $('#summernote').summernote('insertNode', imgNode[0]);
+          }
+        }
   });
 });
