@@ -9,9 +9,12 @@ class Config(object):
     ENV = 'production'
     SECRET_KEY = token
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    IMAGE_PATH = 'static/images/'
     INSTANCE_STRUCTURE = [
         'static/',
+        IMAGE_PATH,
     ]
+    ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 class DevelopmentConfig(Config):
     DEBUG = True

@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 from flask import Flask
 from portfolio.models import db, bcrypt, login_manager
-from portfolio.views import FilesView, DeletePost, PostView
+from portfolio.views import FilesView, DeletePost, PostView, ImgPost
 from portfolio.front_page import front_page
 from portfolio.admin import admin_portal
 from portfolio.blog  import project_hub, notebook
@@ -41,6 +41,7 @@ def create_app(test_config=None):
             os.makedirs(Path(app.instance_path).joinpath(path))
         except OSError:
             continue
+    app.config['UPLOAD_FOLDER'] = Path(app.instance_path).joinpath(app.config['IMAGE_PATH'])
 
     # Initializing app for various extension
     db.init_app(app)
@@ -64,6 +65,7 @@ def create_app(test_config=None):
     app.add_url_rule('/file/<path:file>', view_func=FilesView, endpoint='file')
     app.add_url_rule('/<post>/', view_func=PostView.as_view('preview'))
     app.add_url_rule('/delete', view_func=DeletePost, endpoint='delete')
+    app.add_url_rule('/img', view_func=ImgPost.as_view('img'))
 
 
     return app

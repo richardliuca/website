@@ -17,6 +17,8 @@ $(function () {
   });
 });
 
+var imgUploadURL = $("#ajaxUpload").text();
+
 $(document).ready(function() {
   $('#summernote').summernote({
         placeholder: 'Body',
@@ -25,16 +27,34 @@ $(document).ready(function() {
         focus: false,
         callbacks: {
           onImageUpload: function(files) {
-            var imgNode = $('<img>', {
-              src: 'https://dummyimage.com/600x400/000000/ffffff&text=Place+Holder'
+            var imgForm = new FormData();
+            imgForm.append('imgFile', files[0]);
+            $.ajax({
+              type: "POST",
+              url: imgUploadURL,
+              data: imgForm,
+              processData: false,
+              contentType: false,
+              success: function(data, textStatus, jqXHR) {
+                var imgNode = $('<img>', {
+                  src: data.source
+                });
+                $('#summernote').summernote('insertNode', imgNode[0]);
+              },
+              error: function(jqXHR, textStatus, errorThrown){
+                errorMessage = jqXHR.responseJSON.msg;
+                $("body").prepend(`
+                  <header class="alert alert-danger fade show text-center">
+                  ${errorMessage}
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </header>`)
+                console.log(errorMessage);
+              }
             });
-            var reader = new FileReader();
-            reader.readAsDataURL(files[0]);
-            reader.onload = function() {
-              console.log(reader.result);
-            };
-            $('#summernote').summernote('insertNode', imgNode[0]);
-          }
-        }
+
+          },
+        },
   });
 });

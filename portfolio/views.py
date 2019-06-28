@@ -1,10 +1,12 @@
 from flask import render_template, request, abort, send_from_directory, \
-                current_app, jsonify, make_response
+                current_app, jsonify, make_response, url_for, flash
 from jinja2 import TemplateNotFound
 from flask_login import login_required, fresh_login_required, current_user
 from flask.views import View, MethodView
-from portfolio.models import db, Post, Tag
+from portfolio.models import db, Post, Tag, Image
 import os.path as path
+from werkzeug.utils import secure_filename
+import uuid
 
 class GeneralView(View):
     methods = ['GET',]
@@ -130,3 +132,42 @@ def DeletePost(**kwargs):
             return make_response(jsonify(data), 500)
     else:
         abort(404)
+
+def allowed_file(filename):
+    if '.' in filename:
+        name, ext = path.splitext(filename)
+        return ext[1:].lower() in current_app.config['ALLOWED_EXTENSIONS']
+    return False
+
+class ImgPost(MethodView):
+    methods = ['GET', 'POST']
+
+    def get(self):
+        if current_user.is_authenticated:
+            id = request.args.get('id', 0, type=int)
+            image = Image.query.get(id)
+            if id and image:
+                return send_from_directory(directory=current_app.config['UPLOAD_FOLDER'], filename=image.name)
+        abort(404)
+
+    def post(self):
+        if 'imgFile' in request.files:
+            img_file = request.files['imgFile']
+            if img_file and allowed_file(img_file.filename):
+                img_filename = secure_filename(img_file.filename)
+                _, ext = path.splitext(img_filename)
+                unique_name = str(uuid.uuid5(uuid.NAMESPACE_DNS, img_filename))
+
+                img_file_path = path.join(current_app.config['UPLOAD_FOLDER'], unique_name + ext)
+                image_to_save = Image(name=unique_name + ext)
+                try:
+                    db.session.add(image_to_save)
+                    db.session.commit()
+                    img_file.save(img_file_path)
+                    return make_response(jsonify({'source': url_for('img',
+                                        id=image_to_save.id, _external=True)}))
+                except:
+                    return make_response(jsonify({'msg': 'Image filename is already used'}), 400)
+            else:
+                return make_response(jsonify({'msg': 'Image file extension is not allowed'}), 400)
+        return make_response(500)
