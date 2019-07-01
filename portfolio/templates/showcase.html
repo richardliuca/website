@@ -7,13 +7,13 @@
 
 {% block body %}
   <main role="main" class="container">
-    <section class="jumbotron text-center text-white rounded my-4 bg-dark shadow">
+    <section class="jumbotron text-center text-white rounded my-4 bg-dark shadow" style="display: none;">
       <div class="container">
         {% block jumbo_header %}{% endblock jumbo_header %}
       </div>
     </section>
 
-    <div class="album py-5 bg-light shadow">
+    <div class="album py-5 bg-light shadow" style="display: none;">
       <div class="container">
         {% if catalog %}
           <div class="row">

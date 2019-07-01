@@ -12,8 +12,7 @@ body {
 }
 
 section.jumbotron {
-  background-image: url(http://localhost:5000/front_page/static/cover.JPG);
-  background-position: center center fixed;
+  background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
   -webkit-background-size: cover;

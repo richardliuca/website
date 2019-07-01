@@ -198,13 +198,12 @@ class ImgPost(MethodView):
     methods = ['GET', 'POST']
 
     def get(self):
-        if current_user.is_authenticated:
-            name = request.args.get('name', None)
-            if name:
-                return send_from_directory(directory=path.join(
-                                            current_app.instance_path,
-                                            current_app.config['IMAGE_PATH']),
-                                            filename=name)
+        name = request.args.get('name', None)
+        if name:
+            return send_from_directory(directory=path.join(
+                                        current_app.instance_path,
+                                        current_app.config['IMAGE_PATH']),
+                                        filename=name)
         abort(404)
 
     def post(self):
