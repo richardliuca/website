@@ -4,8 +4,8 @@ from flask_login import login_user, logout_user, current_user, login_required,\
 from portfolio.admin import forms
 from portfolio import db, bcrypt
 from portfolio.models import db, Admin, Post, Tag, Image
-from portfolio.views  import GeneralView, GeneralMethodView, PostSearch,\
-                            file_upload_handler, image_resize
+from portfolio.views  import GeneralView, GeneralMethodView, PostSearch
+from portfolio.tools import file_upload_handler, image_resize
 from datetime import datetime
 import os.path as path
 
