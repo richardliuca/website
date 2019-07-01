@@ -20,13 +20,12 @@
             {% for post in catalog.items %}
               <div class="col-md-6">
                 <div class="row no-gutters mb-4 shadow-sm">
-                  <div class="col-md-4">
-                    <svg class="bd-placeholder-img card-img" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail">
-                    <rect width="100%" height="100%" fill="#55595c"></rect>
-                    <text x="40%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>
-                    </svg>
-                  </div>
-                  <div class="col-md-8">
+                  {% if post.cover %}
+                    <div class="col-md-4 d-none d-lg-block" id="image-col">
+                      <img src="{{ url_for('img', name=post.cover.name) }}" alt="" class="rounded-sm">
+                    </div>
+                  {% endif %}
+                  <div class="col-md">
                     <div class="card-body h-100 d-flex flex-column">
                       <h5 class="card-title text-truncate">{{ post.title }}</h5>
                       <h6 class="card-subtitle text-muted">{{ post.date_posted.strftime("%B, %d %Y") }}</h6>

@@ -1,8 +1,8 @@
 feather.replace();
-$(".alert-success").delay(3000).fadeTo(2000, 500).slideUp(500, function(){
+$(".alert-success").delay(800).fadeTo(2000, 500).slideUp(500, function(){
   $(".alert-success").slideUp(500);
 });
-$(".alert-info").delay(3000).fadeTo(2000, 500).slideUp(500, function(){
+$(".alert-info").delay(800).fadeTo(2000, 500).slideUp(500, function(){
   $(".alert-info").slideUp(500);
 });
 var title = $("title").html();

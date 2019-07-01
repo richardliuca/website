@@ -23,6 +23,11 @@
   max-width: 40rem;
 }
 
+#image-col {
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
 footer {
   padding-top: 3rem;
   padding-bottom: 3rem;

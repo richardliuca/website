@@ -11,7 +11,7 @@
 {% block header %}{% endblock header %}
 
 {% block body %}
-  <section class="jumbotron jumbotron-fluid d-flex flex-column" style="background-image: url({{ url_for('img', name='front_page_cover.jpeg', _external=True) }}); display: none;">
+  <section class="jumbotron jumbotron-fluid d-flex flex-column my-0" style="background-image: url({{ url_for('img', name='front_page_cover.jpeg', _external=True) }}); display: none;">
     <div class="masthead mb-auto">
       <div class="inner">
         <nav class="nav nav-masthead justify-content-center">
@@ -41,7 +41,7 @@
     </div>
   </section>
 
-  <section class="container text-left" id="self-intro" style="display: none;">
+  <section class="container text-left my-1 py-4" id="self-intro" style="display: none;">
     <h1>This is another secion</h1>
     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
