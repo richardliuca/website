@@ -127,10 +127,10 @@ class NewPost(GeneralMethodView):
             print(self._form.errors)
         return super().post(title='New Post', form=self._form)
 
-class Posts(PostSearch):
+class PostsLog(PostSearch):
     decorators = [login_required, fresh_login_required]
 
-    title = 'Post'
+    title = 'Posts'
     target = ['project', 'note']
     complete = 'All'
     max_page = False

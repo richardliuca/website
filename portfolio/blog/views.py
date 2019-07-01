@@ -8,7 +8,7 @@ class Hub(PostSearch):
     complete = True
 
 class Notebook(PostSearch):
-    title = 'NoteBook'
+    title = 'Notebook'
     target = ['note',]
     max_page = 8
     complete = True
