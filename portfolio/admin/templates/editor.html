@@ -5,11 +5,12 @@
 
 {% block dashboard_style %}
   <script src="https://kit.fontawesome.com/d8a5a69657.js"></script>
-      <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css" rel="stylesheet">
 {% endblock dashboard_style %}
 
 {% block dashboard_content %}
-<form class="" action="" method="POST">
+<form class="" action="" method="POST" enctype="multipart/form-data">
   {{ form.hidden_tag() }}
   <fieldset class="form-group">
     <div class="form-row">
@@ -47,10 +48,10 @@
     </div>
 
     <div class="form-row">
-      <div class="form-group col-md-1 mb-0">
+      <div class="form-group col-md-1">
         {{ form.tags.label(class="form-control-label form-control-lg") }}
       </div>
-      <div class="form-group col-md-4 mb-0">
+      <div class="form-group col-md-4">
         {% if form.new_tag.errors %}
           {{ form.new_tag(class="form-control form-control-sm is-invalid", placeholder="New Tag") }}
           <div class="invalid-feedback">
@@ -61,19 +62,10 @@
         {% else %}
           {{ form.new_tag(class="form-control form-control-sm", placeholder="New Tag") }}
         {% endif %}
-      </div>
-      <div class="form-group col-md-4 mb-0">
-        {{ form.post_datetime.label(class="form-control-label form-control-lg") }}
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group col-md-1">
-      </div>
-      <div class="form-group col-md-4">
         {{ form.tags(class="form-control form-control-sm") }}
       </div>
       <div class="form-group col-md-4">
+        {{ form.post_datetime.label(class="form-control-label form-control-lg") }}
         <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
           {% if form.post_datetime.errors %}
             {{ form.post_datetime(class="form-control is-invalid datetimepicker-input", **{'data-target': "#datetimepicker1"}) }}
@@ -93,6 +85,19 @@
           {% endif %}
         </div>
       </div>
+      <div class="form-group col-md-3">
+        {{ form.cover.label(class="form-control-label form-control-lg")}}
+        {% if form.cover.errors %}
+          {{ form.cover(class="form-control-file is-invalid")}}
+          <div class="invalid-feedback">
+            {% for error in form.cover.errors %}
+              <span>{{ error }}</span>
+            {% endfor %}
+          </div>
+        {% else %}
+          {{ form.cover(class="form-control-file")}}
+        {% endif %}
+      </div>
     </div>
 
     <div class="form-group btn-group">
@@ -109,5 +114,7 @@
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js"></script>
+  <script type="text/javascript" src="{{ url_for('admin_portal.static', filename='js/lib/summernote-math.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('admin_portal.static', filename='js/editor.js') }}"></script>
 {% endblock dashboard_script %}

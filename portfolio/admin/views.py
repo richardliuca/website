@@ -1,11 +1,13 @@
-from flask import url_for, flash, redirect, request, abort, jsonify
+from flask import url_for, flash, redirect, request, abort, jsonify, current_app
 from flask_login import login_user, logout_user, current_user, login_required,\
                         fresh_login_required, login_fresh, confirm_login
 from portfolio.admin import forms
 from portfolio import db, bcrypt
-from portfolio.models import db, Admin, Post, Tag
-from portfolio.views  import GeneralView, GeneralMethodView, PostSearch
+from portfolio.models import db, Admin, Post, Tag, Image
+from portfolio.views  import GeneralView, GeneralMethodView, PostSearch,\
+                            file_upload_handler, image_resize
 from datetime import datetime
+import os.path as path
 
 class Login(GeneralMethodView):
 
@@ -75,6 +77,16 @@ class NewPost(GeneralMethodView):
             )))
 
     def get(self):
+        post = Post.query.get(22)
+        if post:
+            print(post)
+            print(post.cover)
+
+        img = Image.query.get(2)
+        if img:
+            print(img)
+            print(img.name)
+            print(img.post_id)
         return super().get(title='New Post', form=self._form)
 
     def post(self):
@@ -90,11 +102,32 @@ class NewPost(GeneralMethodView):
             if self._form.new_tag.data:
                 tags.append(Tag(name=self._form.new_tag.data.lower()))
 
+            cover_img = self._form.cover.data
+            save_path = file_upload_handler(cover_img,
+                                            current_app.config['IMAGE_PATH'])
+            cover_to_save = None
+            if save_path:
+                _, img_filename = path.split(save_path)
+                try:
+                    cover_to_save = Image(name=img_filename)
+                    db.session.add(cover_to_save)
+                    # db.session.commit()
+                    cover_img = image_resize(cover_img, (256, 144))
+                    cover_img.save(save_path)
+                except:
+                    flash('Image filename is already used', 'danger')
+                    return super().post(title='New Post', form=self._form)
+            elif cover_img and not(save_path):
+                flash('Cover image extension not allowed', 'danger')
+                return super().post(title='New Post', form=self._form)
+
             kwargs = {'complete': complete, 'title': self._form.title.data,
                     'tags': tags, 'body': self._form.body.data,
                     'author': current_user,
                     'date_posted': datetime.strptime(
-                    self._form.post_datetime.data, '%B/%d/%Y %H:%M:%S.%f')}
+                    self._form.post_datetime.data,
+                    '%B/%d/%Y %H:%M:%S.%f'),
+                    'cover': cover_to_save}
             new_post = Post(**kwargs)
             flash('Post Saved', 'success')
             db.session.add(new_post)

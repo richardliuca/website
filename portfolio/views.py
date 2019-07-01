@@ -6,7 +6,9 @@ from flask.views import View, MethodView
 from portfolio.models import db, Post, Tag, Image
 import os.path as path
 from werkzeug.utils import secure_filename
-import uuid
+import os, uuid
+from PIL import Image as Pillow_Image
+from functools import reduce
 
 class GeneralView(View):
     methods = ['GET',]
@@ -54,7 +56,8 @@ class PostSearch(GeneralView):
 
     def dispatch_request(self):
         page = request.args.get('page', 1, type=int)
-        tags = [name.lower() for name in request.args.getlist('tag') if not(name.lower() in self.target)]
+        tags = [name.lower() for name in request.args.getlist('tag')
+                                if not(name.lower() in self.target)]
         or_search = request.args.get('or', 0, type=int)
 
         if self.complete == True or self.complete == False:
@@ -62,10 +65,12 @@ class PostSearch(GeneralView):
         else:
             self.posts = Post.query
 
-        self.posts = self.posts.filter(db.or_(*[Post.tags.any(Tag.name == tag) for tag in self.target]))
+        self.posts = self.posts.filter(db.or_(
+                    *[Post.tags.any(Tag.name == tag) for tag in self.target]))
 
         if or_search:
-            self.posts = self.posts.filter(db.or_(*[Post.tags.any(Tag.name == tag) for tag in tags]))
+            self.posts = self.posts.filter(db.or_(
+                    *[Post.tags.any(Tag.name == tag) for tag in tags]))
         else:
             for tag in tags:
                 self.posts = self.posts.filter(Post.tags.any(Tag.name == tag))
@@ -123,6 +128,11 @@ def DeletePost(**kwargs):
             if id == -1:
                 raise Exception('No id argument passed')
             post = Post.query.get(id)
+            if post.cover:
+                os.remove(path.join(current_app.instance_path,
+                                    current_app.config['IMAGE_PATH'],
+                                    post.cover.name))
+                db.session.delete(post.cover)
             data = {'message': f'Post: {post.title} is deleted', 'id': post.id}
             db.session.delete(post)
             db.session.commit()
@@ -134,40 +144,89 @@ def DeletePost(**kwargs):
         abort(404)
 
 def allowed_file(filename):
+
     if '.' in filename:
         name, ext = path.splitext(filename)
         return ext[1:].lower() in current_app.config['ALLOWED_EXTENSIONS']
     return False
+
+def file_upload_handler(file_object, upload_path):
+
+    if file_object and allowed_file(file_object.filename):
+        filename, ext = path.splitext(secure_filename(file_object.filename))
+        unique_name = str(uuid.uuid5(uuid.NAMESPACE_DNS, filename))
+        file_path = path.join(current_app.instance_path,
+                            upload_path,
+                            unique_name + ext)
+        return file_path
+    else:
+        return False
+
+multiply = lambda a, b: a*b
+
+def euclid_algorithm(num1, num2):
+    if num1 == num2:
+        return num1
+    elif num1 > num2:
+        return euclid_algorithm(num2, num1 - num2)
+    else:
+        return euclid_algorithm(num1, num2 - num1)
+
+def largest_cut(current_size, limit):
+    next_size = tuple(map(lambda num: num*2, current_size))
+    if reduce(multiply, next_size) > reduce(multiply, limit):
+        return current_size
+    return largest_cut(next_size, limit)
+
+def image_resize(image, max_size):
+    image = Pillow_Image.open(image)
+    current_size = image.size
+    if reduce(multiply, current_size) > reduce(multiply, max_size):
+        gcd = euclid_algorithm(max_size[0], max_size[1])
+        target_ratio = tuple(map(lambda num: num/gcd, max_size))
+        trim_size = largest_cut(target_ratio, current_size)
+
+        x_diff = (current_size[0] - trim_size[0])/2
+        y_diff = (current_size[1] - trim_size[1])/2
+        boundary = (0+x_diff, 0+y_diff,
+                    current_size[0]-x_diff, current_size[1]-y_diff)
+        image = image.crop(boundary)
+        return image.resize(max_size)
+    return image
 
 class ImgPost(MethodView):
     methods = ['GET', 'POST']
 
     def get(self):
         if current_user.is_authenticated:
-            id = request.args.get('id', 0, type=int)
-            image = Image.query.get(id)
-            if id and image:
-                return send_from_directory(directory=current_app.config['UPLOAD_FOLDER'], filename=image.name)
+            name = request.args.get('name', None)
+            if name:
+                return send_from_directory(directory=path.join(
+                                            current_app.instance_path,
+                                            current_app.config['IMAGE_PATH']),
+                                            filename=name)
         abort(404)
 
     def post(self):
         if 'imgFile' in request.files:
             img_file = request.files['imgFile']
-            if img_file and allowed_file(img_file.filename):
-                img_filename = secure_filename(img_file.filename)
-                _, ext = path.splitext(img_filename)
-                unique_name = str(uuid.uuid5(uuid.NAMESPACE_DNS, img_filename))
-
-                img_file_path = path.join(current_app.config['UPLOAD_FOLDER'], unique_name + ext)
-                image_to_save = Image(name=unique_name + ext)
+            save_path = file_upload_handler(img_file,
+                                            current_app.config['IMAGE_PATH'])
+            if save_path:
+                _, img_filename = path.split(save_path)
                 try:
+                    image_to_save = Image(name=img_filename)
                     db.session.add(image_to_save)
                     db.session.commit()
-                    img_file.save(img_file_path)
+                    img_file = image_resize(img_file, (1024, 768))
+                    img_file.save(save_path)
                     return make_response(jsonify({'source': url_for('img',
-                                        id=image_to_save.id, _external=True)}))
+                                        name=image_to_save.name, _external=True)}))
                 except:
-                    return make_response(jsonify({'msg': 'Image filename is already used'}), 400)
-            else:
-                return make_response(jsonify({'msg': 'Image file extension is not allowed'}), 400)
+                    return make_response(jsonify(
+                                {'msg': 'Image filename is already used'}),
+                                400)
+            return make_response(jsonify(
+                                {'msg': 'Image file extension is not allowed'}),
+                                400)
         return make_response(500)

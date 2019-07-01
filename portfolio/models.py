@@ -33,6 +33,7 @@ class Post(db.Model):
     date_posted = db.Column(db.DateTime, nullable=False)
     title = db.Column(db.String(60), unique=True, nullable=False)
     body = db.Column(db.Text, nullable=False)
+    cover = db.relationship('Image', backref='post', lazy=True, uselist=False)
     admin_id = db.Column(db.Integer, db.ForeignKey('admin.id'), nullable=False)
 
 class Tag(db.Model):
@@ -41,6 +42,7 @@ class Tag(db.Model):
     name = db.Column(db.String(20), unique=True, nullable=False)
 
 class Image(db.Model):
-    __tablename__ = 'picture'
+    __tablename__ = 'image'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True, nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=True)

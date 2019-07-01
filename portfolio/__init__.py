@@ -41,7 +41,6 @@ def create_app(test_config=None):
             os.makedirs(Path(app.instance_path).joinpath(path))
         except OSError:
             continue
-    app.config['UPLOAD_FOLDER'] = Path(app.instance_path).joinpath(app.config['IMAGE_PATH'])
 
     # Initializing app for various extension
     db.init_app(app)

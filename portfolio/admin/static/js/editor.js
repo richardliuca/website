@@ -25,6 +25,16 @@ $(document).ready(function() {
         tabsize: 2,
         height: 370,
         focus: false,
+        toolbar: [
+          ['style', ['style']],
+          ['font', ['bold', 'underline', 'clear']],
+          ['fontname', ['fontname']],
+          ['color', ['color']],
+          ['para', ['ul', 'ol', 'paragraph']],
+          ['table', ['table']],
+          ['insert', ['link', 'math', 'picture', 'video']],
+          ['view', ['fullscreen', 'codeview', 'help']],
+        ],
         callbacks: {
           onImageUpload: function(files) {
             var imgForm = new FormData();
@@ -50,7 +60,6 @@ $(document).ready(function() {
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </header>`)
-                console.log(errorMessage);
               }
             });
 
