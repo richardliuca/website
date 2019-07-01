@@ -5,7 +5,7 @@ from portfolio.admin import forms
 from portfolio import db, bcrypt
 from portfolio.models import db, Admin, Post, Tag, Image
 from portfolio.views  import GeneralView, GeneralMethodView, PostSearch
-from portfolio.tools import file_upload_handler, image_resize
+from portfolio.tools import get_tags, file_upload_handler, image_resize
 from datetime import datetime
 import os.path as path
 
@@ -77,16 +77,6 @@ class NewPost(GeneralMethodView):
             )))
 
     def get(self):
-        post = Post.query.get(22)
-        if post:
-            print(post)
-            print(post.cover)
-
-        img = Image.query.get(2)
-        if img:
-            print(img)
-            print(img.name)
-            print(img.post_id)
         return super().get(title='New Post', form=self._form)
 
     def post(self):
@@ -112,7 +102,7 @@ class NewPost(GeneralMethodView):
                     cover_to_save = Image(name=img_filename)
                     db.session.add(cover_to_save)
                     # db.session.commit()
-                    cover_img = image_resize(cover_img, (256, 144))
+                    cover_img = image_resize(cover_img, (174, 232))
                     cover_img.save(save_path)
                 except:
                     flash('Image filename is already used', 'danger')
@@ -136,18 +126,6 @@ class NewPost(GeneralMethodView):
         else:
             print(self._form.errors)
         return super().post(title='New Post', form=self._form)
-
-def get_tags(filter_con=[], get_list=[]):
-    tags = Tag.query
-    choices = {}
-    if filter_con:
-        for filter in filter_con:
-            tags = tags.filter(Tag.name != filter)
-    elif get_list:
-        tags = tags.filter(db.or_(*[Tag.name == filter for filter in get_list]))
-    tags = tags.all()
-    list(map(lambda x: choices.update({str(x.id) : x.name.capitalize()}), tags))
-    return choices
 
 class Posts(PostSearch):
     decorators = [login_required, fresh_login_required]

@@ -1,9 +1,22 @@
 from flask import current_app
+from portfolio.models import db, Tag
 from werkzeug.utils import secure_filename
 import os, uuid
 import os.path as path
 from PIL import Image as Pillow_Image
 from functools import reduce
+
+def get_tags(filter_con=[], get_list=[]):
+    tags = Tag.query
+    choices = {}
+    if filter_con:
+        for filter in filter_con:
+            tags = tags.filter(Tag.name != filter)
+    elif get_list:
+        tags = tags.filter(db.or_(*[Tag.name == filter for filter in get_list]))
+    tags = tags.all()
+    list(map(lambda x: choices.update({str(x.id) : x.name.capitalize()}), tags))
+    return choices
 
 def allowed_file(filename):
 
