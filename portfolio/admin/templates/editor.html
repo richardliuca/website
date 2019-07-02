@@ -64,7 +64,7 @@
         {% endif %}
         {{ form.tags(class="form-control form-control-sm") }}
       </div>
-      <div class="form-group col-md-4">
+      <div class="form-group col-md-3">
         {{ form.post_datetime.label(class="form-control-label form-control-lg") }}
         <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
           {% if form.post_datetime.errors %}
@@ -85,18 +85,29 @@
           {% endif %}
         </div>
       </div>
-      <div class="form-group col-md-3">
-        {{ form.cover.label(class="form-control-label form-control-lg")}}
-        {% if form.cover.errors %}
-          {{ form.cover(class="form-control-file is-invalid")}}
-          <div class="invalid-feedback">
-            {% for error in form.cover.errors %}
-              <span>{{ error }}</span>
-            {% endfor %}
+      <div class="form-group col-md-4">
+        <div class="row">
+          <div class="col-md">
+            {{ form.cover.label(class="form-control-label form-control-lg")}}
+            {% if form.cover.errors %}
+              {{ form.cover(class="form-control-file is-invalid")}}
+              <div class="invalid-feedback">
+                {% for error in form.cover.errors %}
+                  <span>{{ error }}</span>
+                {% endfor %}
+              </div>
+            {% else %}
+              {{ form.cover(class="form-control-file", onchange="readURL(this);")}}
+            {% endif %}
           </div>
-        {% else %}
-          {{ form.cover(class="form-control-file")}}
-        {% endif %}
+          <div class="col-md">
+            {% if cover %}
+              <img class="rounded-lg" id="cover-placeholder" src="{{ url_for('img', name=cover) }}" alt="Current Cover Image" height="232" width="174">
+            {% else %}
+              <img class="rounded-lg" id="cover-placeholder" src="https://via.placeholder.com/174x232?text=Cover+Image" alt="No Cover Image Selected" height="232" width="174">
+            {% endif %}
+          </div>
+        </div>
       </div>
     </div>
 

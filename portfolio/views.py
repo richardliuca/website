@@ -127,9 +127,10 @@ def DeletePost(**kwargs):
                 raise Exception('No id argument passed')
             post = Post.query.get(id)
             if post.cover:
-                os.remove(path.join(current_app.instance_path,
-                                    current_app.config['IMAGE_PATH'],
-                                    post.cover.name))
+                os.remove(path.abspath(path.join(
+                                            current_app.instance_path,
+                                            current_app.config['IMAGE_PATH'],
+                                            post.cover.name)))
                 db.session.delete(post.cover)
             data = {'message': f'Post: {post.title} is deleted', 'id': post.id}
             db.session.delete(post)
@@ -147,9 +148,9 @@ class ImgPost(MethodView):
     def get(self):
         name = request.args.get('name', None)
         if name:
-            return send_from_directory(directory=path.join(
+            return send_from_directory(directory=path.abspath(path.join(
                                         current_app.instance_path,
-                                        current_app.config['IMAGE_PATH']),
+                                        current_app.config['IMAGE_PATH'])),
                                         filename=name)
         abort(404)
 

@@ -1,3 +1,4 @@
+from flask import request
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField,\
                     TextAreaField, SelectField, SelectMultipleField
@@ -15,7 +16,7 @@ class LoginForm(FlaskForm):
     remember = BooleanField(u'Remember Me')
     submit = SubmitField(u'Login')
 
-class NewPostForm(FlaskForm):
+class PostForm(FlaskForm):
     post = SelectField(u'Post', choices=[])
     tags = SelectMultipleField(u'Tag', choices=[], validators=[Optional()])
     new_tag = StringField(u'New Tag', validators=[Optional()])
@@ -33,7 +34,7 @@ class NewPostForm(FlaskForm):
 
     def validate_title(form, field):
         get_title = Post.query.filter_by(**{field.name: field.data}).first()
-        if get_title:
+        if get_title and request.endpoint != 'admin_portal.edit_post':
             raise ValidationError(f'{field.data} is already taken or in used')
 
     def validate_new_tag(form, field):

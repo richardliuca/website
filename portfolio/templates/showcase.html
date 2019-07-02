@@ -38,7 +38,7 @@
                             <a href="{{ url_for('notebook.note_post', post=source[0], id=post.id) }}" class="btn btn-sm btn-outline-primary">Read More</a>
                           {% endif %}
                           {% if current_user.is_authenticated %}
-                            <a href="javascript:void(0)" class="btn btn-sm btn-outline-success">Edit</a>
+                            <a href="{{ url_for('admin_portal.edit_post', id=post.id) }}" class="btn btn-sm btn-outline-success">Edit</a>
                           {% endif %}
                         </div>
                         <div>

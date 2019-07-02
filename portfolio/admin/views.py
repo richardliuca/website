@@ -8,6 +8,8 @@ from portfolio.views  import GeneralView, GeneralMethodView, PostSearch
 from portfolio.tools import get_tags, file_upload_handler, image_resize
 from datetime import datetime
 import os.path as path
+import os
+from werkzeug.datastructures import FileStorage
 
 class Login(GeneralMethodView):
 
@@ -66,15 +68,13 @@ class NewPost(GeneralMethodView):
 
     def __init__(self, template_name):
         super().__init__(template_name)
-        self._form = forms.NewPostForm()
+        self._form = forms.PostForm()
         self._post_tags = get_tags(get_list=['project', 'note'])
         self._tags = get_tags(filter_con=['project', 'note'])
         self._form.post.choices.extend(list(map(
-            lambda val: (val[0], val[1]), self._post_tags.items()
-            )))
+            lambda val: (val[0], val[1]), self._post_tags.items())))
         self._form.tags.choices.extend(list(map(
-            lambda val: (val[0], val[1]), self._tags.items()
-            )))
+            lambda val: (val[0], val[1]), self._tags.items())))
 
     def get(self):
         return super().get(title='New Post', form=self._form)
@@ -92,24 +92,24 @@ class NewPost(GeneralMethodView):
             if self._form.new_tag.data:
                 tags.append(Tag(name=self._form.new_tag.data.lower()))
 
-            cover_img = self._form.cover.data
-            save_path = file_upload_handler(cover_img,
-                                            current_app.config['IMAGE_PATH'])
             cover_to_save = None
-            if save_path:
-                _, img_filename = path.split(save_path)
-                try:
-                    cover_to_save = Image(name=img_filename)
-                    db.session.add(cover_to_save)
-                    # db.session.commit()
-                    cover_img = image_resize(cover_img, (174, 232))
-                    cover_img.save(save_path)
-                except:
-                    flash('Image filename is already used', 'danger')
+            if self._form.cover.data:
+                cover_img = self._form.cover.data
+                save_path = file_upload_handler(cover_img,
+                                                current_app.config['IMAGE_PATH'])
+                if save_path:
+                    _, img_filename = path.split(save_path)
+                    try:
+                        cover_to_save = Image(name=img_filename)
+                        db.session.add(cover_to_save)
+                        cover_img = image_resize(cover_img, (174, 232))
+                        cover_img.save(save_path)
+                    except:
+                        flash('Image filename is already used', 'danger')
+                        return super().post(title='New Post', form=self._form)
+                elif cover_img and not(save_path):
+                    flash('Cover image extension not allowed', 'danger')
                     return super().post(title='New Post', form=self._form)
-            elif cover_img and not(save_path):
-                flash('Cover image extension not allowed', 'danger')
-                return super().post(title='New Post', form=self._form)
 
             kwargs = {'complete': complete, 'title': self._form.title.data,
                     'tags': tags, 'body': self._form.body.data,
@@ -126,6 +126,99 @@ class NewPost(GeneralMethodView):
         else:
             print(self._form.errors)
         return super().post(title='New Post', form=self._form)
+
+class EditPost(GeneralMethodView):
+    decorators = [login_required, fresh_login_required]
+
+    def __init__(self, template_name):
+        super().__init__(template_name)
+        self._form = forms.PostForm()
+        self._post_tags = get_tags(get_list=['project', 'note'])
+        self._tags = get_tags(filter_con=['project', 'note'])
+        self._form.post.choices.extend(list(map(
+            lambda val: (val[0], val[1]), self._post_tags.items())))
+        self._form.tags.choices.extend(list(map(
+            lambda val: (val[0], val[1]), self._tags.items())))
+
+    def get(self):
+        post_id = request.args.get('id', 0, type=int)
+        self._post = Post.query.get(post_id) if post_id else None
+        self._cover_name = self._post.cover.name if self._post.cover else None
+        if post_id and self._post:
+            tags = tuple(map(lambda tag: str(tag.id), self._post.tags))
+
+            self._form.post.data = list(filter(lambda tag_id: tag_id in tags,
+                                                self._post_tags.keys() )).pop()
+            self._form.tags.data = list(filter(lambda tag_id: tag_id in tags,
+                                                self._tags.keys()))
+            self._form.post_datetime.data = self._post.date_posted.strftime(
+                                                        '%B/%d/%Y %H:%M:%S.%f')
+            self._form.title.data = self._post.title
+            self._form.body.data = self._post.body
+            return super().get(title='Edit Post', form=self._form,
+                            cover=self._cover_name)
+        abort(404)
+
+    def post(self):
+        post_id = request.args.get('id', 0, type=int)
+        self._post = Post.query.get(post_id) if post_id else None
+        self._cover_name = self._post.cover.name if self._post.cover else None
+        if self._post:
+            if self._form.cancel.data:
+                flash('Edit discarded', 'info')
+                return redirect(url_for('admin_portal.dashboard'))
+            elif self._form.validate_on_submit():
+                tags = []
+                tags.append(Tag.query.get(int(self._form.post.data)))
+                complete = True if self._form.complete_submit.data else False
+                if self._form.tags.data:
+                    [tags.append(Tag.query.get(int(id))) for id in self._form.tags.data]
+                if self._form.new_tag.data:
+                    tags.append(Tag(name=self._form.new_tag.data.lower()))
+
+                cover_to_save = self._post.cover
+                if self._form.cover.data:
+                    cover_img = self._form.cover.data
+                    save_path = file_upload_handler(cover_img,
+                                                    current_app.config['IMAGE_PATH'])
+                    if save_path:
+                        _, img_filename = path.split(save_path)
+                        try:
+                            if cover_to_save:
+                                os.remove(path.abspath(path.join(
+                                    current_app.instance_path,
+                                    current_app.config['IMAGE_PATH'],
+                                    cover_to_save.name)))
+                                db.session.delete(cover_to_save)
+                            cover_to_save = Image(name=img_filename)
+                            db.session.add(cover_to_save)
+                            cover_img = image_resize(cover_img, (174, 232))
+                            cover_img.save(save_path)
+                        except:
+                            flash('Image filename is already used', 'danger')
+                            return super().post(title='New Post', form=self._form)
+                    elif cover_img and not(save_path):
+                        flash('Cover image extension not allowed', 'danger')
+                        return super().post(title='New Post', form=self._form)
+
+                kwargs = {'complete': complete, 'title': self._form.title.data,
+                        'tags': tags, 'body': self._form.body.data,
+                        'author': current_user,
+                        'date_posted': datetime.strptime(
+                        self._form.post_datetime.data,
+                        '%B/%d/%Y %H:%M:%S.%f'),
+                        'cover': cover_to_save}
+                [ setattr(self._post, key, value) for key, value in kwargs.items()]
+                flash('Post Saved', 'success')
+                db.session.commit()
+                return redirect(url_for('admin_portal.dashboard'))
+
+            else:
+                print(self._form.errors)
+            return super().post(title='Edit Post', form=self._form,
+                            cover=self._cover_name)
+        abort(404)
+
 
 class PostsLog(PostSearch):
     decorators = [login_required, fresh_login_required]

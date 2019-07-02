@@ -33,7 +33,7 @@ def file_upload_handler(file_object, upload_path):
         file_path = path.join(current_app.instance_path,
                             upload_path,
                             unique_name + ext)
-        return file_path
+        return path.abspath(file_path)
     else:
         return False
 
