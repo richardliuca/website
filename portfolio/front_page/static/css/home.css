@@ -1,3 +1,11 @@
+.spinner-grow {
+  display: block;
+  position: fixed;
+  top: 50%;
+  /* right: 50%;  */
+  left: 50%;
+}
+
 a,
 a:focus,
 a:hover {
@@ -11,18 +19,16 @@ body {
   color: #fff;
 }
 
-section.jumbotron {
+.jumbotron {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
+  height: 105%;
 }
 
-.jumbotron {
-  height: 90%;
-}
 
 .masthead-brand {
   margin-bottom: 0;

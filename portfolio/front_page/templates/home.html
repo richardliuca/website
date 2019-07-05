@@ -11,31 +11,33 @@
 {% block header %}{% endblock header %}
 
 {% block body %}
-  <section class="jumbotron jumbotron-fluid d-flex flex-column my-0" style="background-image: url({{ url_for('img', name='front_page_cover.jpeg', _external=True) }}); display: none;">
-    <div class="masthead mb-auto">
-      <div class="inner">
-        <nav class="nav nav-masthead justify-content-center">
-          <h3 class="masthead-brand mx-4 d-none d-sm-block">Richard Liu</h3>
-          <a class="nav-link" id="Home" href="{{ url_for('front_page.home') }}">Home</a>
-          <a class="nav-link" id="Projects-Hub" href="{{ url_for('project_hub.hub') }}">Project Hub</a>
-          <a class="nav-link" id="Notebook" href="{{ url_for('notebook.notebook') }}">Notebook</a>
-          {% if current_user.is_authenticated %}
-            <a class="nav-link" id="Dashboard" href="{{ url_for('admin_portal.dashboard') }}">Dashboard</a>
-            <a class="nav-link" href="{{ url_for('admin_portal.logout') }}">Logout</a>
-          {% endif %}
-        </nav>
+  <section class="jumbotron jumbotron-fluid my-0" style="background-image: url({{ url_for('img', name='frontpage_cover.jpeg', _external=True) }}); display: none;">
+    <div class="container-fluid d-flex flex-column h-100">
+      <div class="masthead mb-auto">
+        <div class="inner">
+          <nav class="nav nav-masthead justify-content-center">
+            <h3 class="masthead-brand mx-4 d-none d-sm-block">Richard Liu</h3>
+            <a class="nav-link" id="Home" href="{{ url_for('front_page.home') }}">Home</a>
+            <a class="nav-link" id="Projects-Hub" href="{{ url_for('project_hub.hub') }}">Project Hub</a>
+            <a class="nav-link" id="Notebook" href="{{ url_for('notebook.notebook') }}">Notebook</a>
+            {% if current_user.is_authenticated %}
+              <a class="nav-link" id="Dashboard" href="{{ url_for('admin_portal.dashboard') }}">Dashboard</a>
+              <a class="nav-link" href="{{ url_for('admin_portal.logout') }}">Logout</a>
+            {% endif %}
+          </nav>
+        </div>
       </div>
-    </div>
-    <div class="container-fluid text-center my-auto">
-      <h1 class="display-4">Fluid jumbotron</h1>
-      <p class="lead">This is a modified jumbotron that occupies the entire horizontal space of its parent.</p>
-    </div>
-    <div class="social mt-auto">
-      <div class="d-flex justify-content-center">
-        <div class="list-group list-group-horizontal" style="list-style-type: none;">
-          <a class="px-2" href="https://www.linkedin.com/in/richardliuca"><i data-feather="linkedin"></i></a>
-          <a class="px-2" href="https://github.com/richardliuca/"><i data-feather="github"></i></a>
-          <a class="px-2" href="https://twitter.com/richardliuca"><i data-feather="twitter"></i></a>
+      <div class="container-fluid text-center my-auto">
+        <h1 class="display-4">Fluid jumbotron</h1>
+        <p class="lead">This is a modified jumbotron that occupies the entire horizontal space of its parent.</p>
+      </div>
+      <div class="social mt-auto">
+        <div class="d-flex justify-content-center">
+          <div class="list-group list-group-horizontal" style="list-style-type: none;">
+            <a class="px-2" href="https://www.linkedin.com/in/richardliuca"><i data-feather="linkedin"></i></a>
+            <a class="px-2" href="https://github.com/richardliuca/"><i data-feather="github"></i></a>
+            <a class="px-2" href="https://twitter.com/richardliuca"><i data-feather="twitter"></i></a>
+          </div>
         </div>
       </div>
     </div>
