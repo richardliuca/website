@@ -50,62 +50,26 @@ def FilesView(file):
     except:
         abort(404)
 
-class PostSearch(GeneralView):
-
-    def dispatch_request(self):
-        page = request.args.get('page', 1, type=int)
-        tags = [name.lower() for name in request.args.getlist('tag')
-                                if not(name.lower() in self.target)]
-        or_search = request.args.get('or', 0, type=int)
-
-        if self.complete == True or self.complete == False:
-            self.posts = Post.query.filter(Post.complete == self.complete)
-        else:
-            self.posts = Post.query
-
-        self.posts = self.posts.filter(db.or_(
-                    *[Post.tags.any(Tag.name == tag) for tag in self.target]))
-
-        if or_search:
-            self.posts = self.posts.filter(db.or_(
-                    *[Post.tags.any(Tag.name == tag) for tag in tags]))
-        else:
-            for tag in tags:
-                self.posts = self.posts.filter(Post.tags.any(Tag.name == tag))
-            or_search = None
-
-        self.posts = self.posts.order_by(Post.id.desc())
-
-        if self.max_page:
-            self.posts = self.posts.paginate(page=page, per_page=self.max_page)
-        else:
-            self.posts = self.posts.all()
-
-        return super().dispatch_request(title=self.title,
-                                        catalog=self.posts,
-                                        source=self.target,
-                                        tags=tags,
-                                        or_search=or_search)
-
 class PostView(GeneralView):
 
     def dispatch_request(self, **kwargs):
-        id = request.args.get('id', None)
-        post = Post.query.get(id) if id else None
+        title = request.args.get('title', None)
+        post = Post.query.filter_by(title = title).first() if title else None
 
-        if not(kwargs and post):
-            abort(404)
-        elif kwargs['post'] == 'project':
-            title = 'Project Hub'
-        elif kwargs['post'] == 'note':
-            title = 'Notebook'
-        elif kwargs['post'] == 'preview':
-            if current_user.is_authenticated:
-                return make_response(jsonify({
-                        'title': post.title,
-                        'date_posted': post.date_posted.strftime("%B, %d %Y"),
-                        'content': post.body,
-                        'tags': [tag.name for tag in post.tags]}))
+        print(post)
+
+        if kwargs and post:
+            if kwargs['post'] == 'project' or kwargs['post'] == 'note':
+                title = post.title
+            elif kwargs['post'] == 'preview':
+                if current_user.is_authenticated:
+                    return make_response(jsonify({
+                            'title': post.title,
+                            'date_posted': post.date_posted.strftime("%B, %d %Y"),
+                            'content': post.body,
+                            'tags': [tag.name for tag in post.tags]}))
+                else:
+                    abort(404)
             else:
                 abort(404)
         else:

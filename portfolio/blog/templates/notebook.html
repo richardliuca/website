@@ -1,13 +1,38 @@
-{% extends "showcase.html" %}
+{% extends "layout.html" %}
+
 {% block meta %}
   <META NAME="ROBOTS" CONTENT="INDEX, FOLLOW">
   <link rel="canonical" href="{{ url_for('notebook.notebook', _external=True) }}">
 {% endblock meta %}
 
-{% block showcase_style %}
-{% endblock showcase_style %}
+{% block style %}
+{% endblock style %}
 
-{% block jumbo_header %}
-  <h1 class="jumbotron-heading">Notebook</h1>
-  <p class="lead">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it entirely.</p>
-{% endblock jumbo_header %}
+{% block body %}
+  <div class="container">
+    <div class="accordion shadow py-5 px-5" id="accordionNotebook">
+      {% for tag, posts in catalog.items() %}
+        <div class="card shadow">
+          <div class="card-header" id="heading-{{tag}}" type="button" data-toggle="collapse" data-target="#collapse-{{tag}}" aria-expanded="true" aria-controls="collapse-{{tag}}">
+            {{ tag }}
+            <!-- <h2 class="mb-0">
+              <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse-{{tag}}" aria-expanded="true" aria-controls="collapse-{{tag}}">
+                {{ tag }}
+              </button>
+            </h2> -->
+          </div>
+          <div id="collapse-{{tag}}" class="collapse show" aria-labelledby="heading-{{tag}}" data-parent="#accordionNotebook">
+            <div class="card-body">
+              {% for post in posts %}
+                {{ post.title }}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock body %}
+
+{% block script %}
+{% endblock script%}

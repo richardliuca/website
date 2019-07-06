@@ -4,12 +4,11 @@ from flask_login import login_user, logout_user, current_user, login_required,\
 from portfolio.admin import forms
 from portfolio import db, bcrypt
 from portfolio.models import db, Admin, Post, Tag, Image
-from portfolio.views  import GeneralView, GeneralMethodView, PostSearch
+from portfolio.views  import GeneralView, GeneralMethodView
 from portfolio.tools import get_tags, file_upload_handler, image_resize
 from datetime import datetime
 import os.path as path
 import os
-from werkzeug.datastructures import FileStorage
 
 class Login(GeneralMethodView):
 
@@ -140,11 +139,12 @@ class EditPost(GeneralMethodView):
         self._form.tags.choices.extend(list(map(
             lambda val: (val[0], val[1]), self._tags.items())))
 
-    def get(self):
-        post_id = request.args.get('id', 0, type=int)
-        self._post = Post.query.get(post_id) if post_id else None
+        self._post_id = request.args.get('id', 0, type=int)
+        self._post = Post.query.get(self._post_id) if self._post_id else None
         self._cover_name = self._post.cover.name if self._post.cover else None
-        if post_id and self._post:
+
+    def get(self):
+        if self._post_id and self._post:
             tags = tuple(map(lambda tag: str(tag.id), self._post.tags))
 
             self._form.post.data = list(filter(lambda tag_id: tag_id in tags,
@@ -160,9 +160,6 @@ class EditPost(GeneralMethodView):
         abort(404)
 
     def post(self):
-        post_id = request.args.get('id', 0, type=int)
-        self._post = Post.query.get(post_id) if post_id else None
-        self._cover_name = self._post.cover.name if self._post.cover else None
         if self._post:
             if self._form.cancel.data:
                 flash('Edit discarded', 'info')
@@ -219,11 +216,10 @@ class EditPost(GeneralMethodView):
                             cover=self._cover_name)
         abort(404)
 
-
-class PostsLog(PostSearch):
+class PostsLog(GeneralView):
     decorators = [login_required, fresh_login_required]
-
     title = 'Posts'
-    target = ['project', 'note']
-    complete = 'All'
-    max_page = False
+
+    def dispatch_request(self):
+        posts = Post.query.order_by(Post.id.desc()).all()
+        return super().dispatch_request(title=self.title, catalog=posts)

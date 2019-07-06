@@ -1,13 +1,101 @@
-{% extends "showcase.html" %}
+{% extends "layout.html" %}
+
 {% block meta %}
   <META NAME="ROBOTS" CONTENT="INDEX, FOLLOW">
   <link rel="canonical" href="{{ url_for('project_hub.hub', _external=True) }}">
 {% endblock meta %}
 
-{% block showcase_style %}
-{% endblock showcase_style %}
+{% block style %}
+ <link rel="stylesheet" href="{{ url_for('project_hub.static', filename='css/projects.css') }}">
+{% endblock style %}
 
-{% block jumbo_header %}
-  <h1 class="jumbotron-heading">Personal Projects</h1>
-  <p class="lead">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it entirely.</p>
-{% endblock jumbo_header %}
+{% block body %}
+  <main role="main" class="container">
+    <section class="jumbotron text-center text-white rounded my-4 bg-dark shadow" style="display: none;">
+      <div class="container">
+        <h1 class="jumbotron-heading">Personal Projects</h1>
+        <p class="lead">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it entirely.</p>
+      </div>
+    </section>
+
+    <div class="album py-5 bg-light shadow" style="display: none;">
+      <div class="container">
+        {% if catalog %}
+          <div class="row">
+            {% for post in catalog.items %}
+              <div class="col-md-6">
+                <div class="row no-gutters mb-4 shadow-sm">
+                  {% if post.cover %}
+                    <div class="col-md-4 d-none d-lg-block" id="image-col">
+                      <img src="{{ url_for('img', name=post.cover.name) }}" alt="" class="rounded-sm">
+                    </div>
+                  {% endif %}
+                  <div class="col-md">
+                    <div class="card-body h-100 d-flex flex-column">
+                      <h5 class="card-title text-truncate">{{ post.title }}</h5>
+                      <h6 class="card-subtitle text-muted">{{ post.date_posted.strftime("%B, %d %Y") }}</h6>
+                      <p class="card-text">{{ post.body|striptags }}</p>
+                      <div class="mt-auto d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                          <a href="{{ url_for('project_hub.proj_post', post='project', title=post.title)}}" class="btn btn-sm btn-outline-primary">Read More</a>
+                          {% if current_user.is_authenticated %}
+                            <a href="{{ url_for('admin_portal.edit_post', id=post.id) }}" class="btn btn-sm btn-outline-success">Edit</a>
+                          {% endif %}
+                        </div>
+                        <div>
+                        {% if post.tags %}
+                          <span><i data-feather="tag"></i>
+                            {% for tag in post.tags %}
+                              {% if not(tag.name == 'project')  %}
+                                {% if loop.last %}
+                                  <small class="text-muted font-weight-bold"> <a href="{{ url_for('project_hub.hub', tag=tag.name) }}">{{ tag.name.capitalize() }}</a></small>
+                                {% else %}
+                                  <small class="text-muted font-weight-bold"> <a href="{{ url_for('project_hub.hub', tag=tag.name) }}">{{ tag.name.capitalize() }}</a>,</small>
+                                {% endif %}
+                              {% endif %}
+                            {% endfor %}
+                          </span>
+                        {% endif %}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+          <div class="row">
+            <div class="col">
+              <ul class="pagination pagination-lg">
+                {% if catalog.has_prev %}
+                  <li class="page-item active">
+                    <a class="page-link" href="{{ url_for('project_hub.hub', page=catalog.prev_num, tag=tags, or=or_search)}}">{{catalog.prev_num}}/{{catalog.pages}} Previous</a>
+                  </li>
+                {% else %}
+                {% endif %}
+              </ul>
+            </div>
+            <div class="col">
+            </div>
+            <div class="col">
+              <ul class="pagination pagination-lg justify-content-end">
+                {% if catalog.has_next %}
+                  <li class="page-item active">
+                    <a class="page-link" href="{{ url_for('project_hub.hub', page=catalog.next_num, tag=tags, or=or_search)}}">{{catalog.next_num}}/{{catalog.pages}} Next</a>
+                  </li>
+                {% else %}
+                {% endif %}
+              </ul>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+  </main>
+{% endblock body %}
+
+{% block script %}
+  <script type="text/javascript" src="{{ url_for('project_hub.static', filename='js/projects.js') }}"></script>
+{% endblock script%}

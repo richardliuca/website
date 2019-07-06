@@ -114,11 +114,11 @@ $("#deletePostModal").on('show.bs.modal', function (event) {
 // Post view and ajax call for boostrap modal
 $("#previewPostModal").on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget);
-  var postId = button.data('postid');
+  var postTitle = button.data('posttitle');
   var modal = $(this);
   $.ajax({
     url: $("#ajaxPreview").html(),
-    data: { id: postId },
+    data: { title: postTitle },
     success: function(data, textStatus, jqXHR) {
       modal.find('.modal-title').html(data.title);
       modal.find('#modal-date').html(data.date_posted);
