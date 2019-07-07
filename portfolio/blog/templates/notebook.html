@@ -6,33 +6,32 @@
 {% endblock meta %}
 
 {% block style %}
+  <link rel="stylesheet" href="{{ url_for('notebook.static', filename='css/notebook.css') }}">
 {% endblock style %}
 
 {% block body %}
-  <div class="container">
-    <div class="accordion shadow py-5 px-5" id="accordionNotebook">
-      {% for tag, posts in catalog.items() %}
-        <div class="card shadow">
-          <div class="card-header" id="heading-{{tag}}" type="button" data-toggle="collapse" data-target="#collapse-{{tag}}" aria-expanded="true" aria-controls="collapse-{{tag}}">
-            {{ tag }}
-            <!-- <h2 class="mb-0">
-              <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse-{{tag}}" aria-expanded="true" aria-controls="collapse-{{tag}}">
-                {{ tag }}
-              </button>
-            </h2> -->
-          </div>
-          <div id="collapse-{{tag}}" class="collapse show" aria-labelledby="heading-{{tag}}" data-parent="#accordionNotebook">
-            <div class="card-body">
-              {% for post in posts %}
-                {{ post.title }}
-              {% endfor %}
-            </div>
-          </div>
+  <div class="container my-5 shadow" style="display: none;">
+    {% include "notes_nav.html" %}
+    {% for tag in catalog.keys() %}
+      {% if loop.first %}
+        <div class="content p-3" id="{{tag}}-content">
+          {% for post in catalog[tag] %}
+            <h1>{{ post.title }}</h1>
+            <div class="post-body">{{ post.body }}</div>
+          {% endfor %}
         </div>
-      {% endfor %}
-    </div>
+      {% else %}
+        <div class="content p-3" id="{{tag}}-content" style="display: none;">
+          {% for post in catalog[tag] %}
+            <h1>{{ post.title }}</h1>
+            <div class="post-body">{{ post.body }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endfor %}
   </div>
 {% endblock body %}
 
 {% block script %}
+  <script type="text/javascript" src="{{ url_for('notebook.static', filename='js/notebook.js') }}"></script>
 {% endblock script%}

@@ -50,7 +50,8 @@ class Notebook(GeneralView):
     def dispatch_request(self):
         posts = Post.query.filter_by(complete=True).\
                             filter(Post.tags.any(Tag.name == 'note')).\
-                            filter(Post.tags.any(Tag.name == 'note')).all()
+                            filter(Post.tags.any(Tag.name == 'note')).\
+                            order_by(Post.id.desc()).all()
         tags = []
         condtion = lambda tag : tag not in tags and \
                                 not(tag.name == 'note') and \

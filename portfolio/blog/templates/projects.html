@@ -34,7 +34,7 @@
                     <div class="card-body h-100 d-flex flex-column">
                       <h5 class="card-title text-truncate">{{ post.title }}</h5>
                       <h6 class="card-subtitle text-muted">{{ post.date_posted.strftime("%B, %d %Y") }}</h6>
-                      <p class="card-text">{{ post.body|striptags }}</p>
+                      <div class="card-text mb-3">{{ post.body|striptags }}</div>
                       <div class="mt-auto d-flex justify-content-between align-items-center">
                         <div class="btn-group">
                           <a href="{{ url_for('project_hub.proj_post', post='project', title=post.title)}}" class="btn btn-sm btn-outline-primary">Read More</a>
