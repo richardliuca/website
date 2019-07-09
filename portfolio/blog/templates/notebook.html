@@ -10,11 +10,11 @@
 {% endblock style %}
 
 {% block body %}
-  <div class="container my-5 shadow" style="display: none;">
+  <div class="container my-5 px-0 shadow" style="display: none;">
     {% include "notes_nav.html" %}
     {% for tag in catalog.keys() %}
       {% if loop.first %}
-        <div class="content p-3" id="{{tag|replace(' ', '-')}}-content">
+        <div class="content p-3 mx-3" id="{{tag|replace(' ', '-')}}-content">
           {% for post in catalog[tag] %}
             <div class="pb-4">
               <h3>{{ post.title }}</h3>
@@ -29,7 +29,7 @@
           {% endfor %}
         </div>
       {% else %}
-        <div class="content p-3" id="{{tag}}-content" style="display: none;">
+        <div class="content p-3 mx-3" id="{{tag}}-content" style="display: none;">
           {% for post in catalog[tag] %}
             <div class="pb-4">
               <h1>{{ post.title }}</h1>
