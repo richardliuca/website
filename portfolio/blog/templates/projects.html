@@ -27,7 +27,7 @@
                 <div class="row no-gutters mb-4 shadow-sm">
                   {% if post.cover %}
                     <div class="col-md-4 d-none d-lg-block" id="image-col">
-                      <img src="{{ url_for('img', name=post.cover.name) }}" alt="" class="rounded-sm">
+                      <img src="{{ url_for('img', name=post.cover.name) }}" alt="" class="img-thumbnail rounded-sm">
                     </div>
                   {% endif %}
                   <div class="col-md">

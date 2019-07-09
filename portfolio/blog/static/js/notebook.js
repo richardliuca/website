@@ -1,8 +1,12 @@
 $("div.post-body").each(function(num, elem) {
   var text = $(elem).text();
+  var content = $(elem).html();
   if (text.length > 500) {
-    $(elem).text(text.slice(0,500).trim().concat('...'));
+    var tail = text.slice(490, 500);
+    var cuttingIndex = content.indexOf(tail, 490);
+    $(elem).html(content.slice(0, cuttingIndex).trim().concat('...'));
   };
+
 });
 
 $("a.notes-nav:first").addClass("active");

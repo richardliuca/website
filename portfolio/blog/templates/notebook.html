@@ -14,17 +14,28 @@
     {% include "notes_nav.html" %}
     {% for tag in catalog.keys() %}
       {% if loop.first %}
-        <div class="content p-3" id="{{tag}}-content">
+        <div class="content p-3" id="{{tag|replace(' ', '-')}}-content">
           {% for post in catalog[tag] %}
-            <h1>{{ post.title }}</h1>
-            <div class="post-body">{{ post.body }}</div>
+            <div class="pb-4">
+              <h3>{{ post.title }}</h3>
+              <div class="post-body">{{ post.body | safe}}</div>
+              <div class="btn-group float-right">
+                <a href="{{ url_for('notebook.note_post', post='note', title=post.title)}}" class="btn btn-sm btn-outline-primary">Read More</a>
+                {% if current_user.is_authenticated %}
+                  <a href="{{ url_for('admin_portal.edit_post', id=post.id) }}" class="btn btn-sm btn-outline-success">Edit</a>
+                {% endif %}
+              </div>
+            </div>
           {% endfor %}
         </div>
       {% else %}
         <div class="content p-3" id="{{tag}}-content" style="display: none;">
           {% for post in catalog[tag] %}
-            <h1>{{ post.title }}</h1>
-            <div class="post-body">{{ post.body }}</div>
+            <div class="pb-4">
+              <h1>{{ post.title }}</h1>
+              <div class="post-body">{{ post.body }}</div>
+              <a href="{{ url_for('notebook.note_post', post='note', title=post.title)}}" class="float-right btn btn-sm btn-outline-primary">Read More</a>
+            </div>
           {% endfor %}
         </div>
       {% endif %}

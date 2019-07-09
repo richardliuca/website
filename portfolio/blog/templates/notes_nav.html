@@ -1,7 +1,7 @@
 <ul class="nav nav-tabs">
  {% for tag in catalog.keys() %}
   <li class="nav-item">
-    <a class="nav-link notes-nav" id="{{ tag }}" onclick="changeTab('{{tag}}')" href="javascript:void(0);">{{ tag.title() }}</a>
+    <a class="nav-link notes-nav" id="{{ tag | replace(' ', '-') }}" onclick="changeTab('{{tag|replace(' ', '-')}}')" href="javascript:void(0);">{{ tag.title() }}</a>
   </li>
  {% endfor %}
 </ul>

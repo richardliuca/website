@@ -47,7 +47,8 @@ $(document).ready(function() {
               contentType: false,
               success: function(data, textStatus, jqXHR) {
                 var imgNode = $('<img>', {
-                  src: data.source
+                  src: data.source,
+                  class: "img-fluid",
                 });
                 $('#summernote').summernote('insertNode', imgNode[0]);
               },
